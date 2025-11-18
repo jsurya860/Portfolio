@@ -1,0 +1,136 @@
+import { Linkedin, Github, Mail, Terminal, Loader } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { fetchSocialLinks, fetchPortfolioSettings, SocialLink, PortfolioSettings } from '../lib/supabase';
+
+const socialIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Linkedin,
+  Github,
+  Mail,
+};
+
+const defaultSocialLinks: SocialLink[] = [
+  {
+    id: '1',
+    platform: 'LinkedIn',
+    url: 'https://linkedin.com/in/surya',
+    icon_type: 'Linkedin',
+    display_order: 1,
+  },
+  {
+    id: '2',
+    platform: 'GitHub',
+    url: 'https://github.com/surya',
+    icon_type: 'Github',
+    display_order: 2,
+  },
+  {
+    id: '3',
+    platform: 'Email',
+    url: 'mailto:surya@example.com',
+    icon_type: 'Mail',
+    display_order: 3,
+  },
+];
+
+const defaultSettings: PortfolioSettings = {
+  id: 'default',
+  site_title: 'Surya - QA Engineer',
+  site_description: 'Quality Assurance Engineer',
+  email: 'surya@example.com',
+};
+
+export default function Footer() {
+  const currentYear = new Date().getFullYear();
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(defaultSocialLinks);
+  const [settings, setSettings] = useState<PortfolioSettings>(defaultSettings);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      const [links, sett] = await Promise.all([fetchSocialLinks(), fetchPortfolioSettings()]);
+
+      if (links && links.length > 0) setSocialLinks(links);
+      if (sett) setSettings(sett);
+
+      setLoading(false);
+    };
+
+    loadData();
+  }, []);
+
+  if (loading) {
+    return (
+      <footer className="relative py-12 px-6 border-t border-gray-800">
+        <div className="absolute inset-0 bg-[#0a0e27]" />
+        <div className="max-w-6xl mx-auto relative z-10 flex items-center justify-center">
+          <Loader className="w-6 h-6 text-gray-400 animate-spin" />
+        </div>
+      </footer>
+    );
+  }
+
+  return (
+    <footer className="relative py-12 px-6 border-t border-gray-800">
+      <div className="absolute inset-0 bg-[#0a0e27]" />
+
+      <div className="max-w-6xl mx-auto relative z-10">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="text-center md:text-left">
+            <div className="flex items-center gap-2 mb-2 justify-center md:justify-start">
+              <Terminal className="w-5 h-5 text-green-400" />
+              <span className="text-xl font-bold text-white">{settings.site_title.split(' - ')[0]}</span>
+            </div>
+            <p className="text-gray-400 text-sm font-mono">
+              {settings.site_description}
+            </p>
+            <p className="text-gray-500 text-xs mt-2">
+              Building reliable software, one test at a time
+            </p>
+          </div>
+
+          <div className="flex items-center gap-4">
+            {socialLinks.map((link) => {
+              const IconComponent = socialIconMap[link.icon_type] || Mail;
+
+              return (
+                <a
+                  key={link.id}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group p-3 bg-[#151b35] border border-gray-700 rounded-lg hover:border-blue-400 hover:bg-blue-500/10 transition-all duration-300"
+                  aria-label={link.platform}
+                >
+                  <IconComponent className="w-5 h-5 text-gray-400 group-hover:text-blue-400 transition-colors" />
+                </a>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="mt-8 pt-8 border-t border-gray-800">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="text-gray-500 text-sm text-center md:text-left">
+              <span className="font-mono text-xs">
+                © {currentYear} {settings.site_title.split(' - ')[0]}. All rights reserved.
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 font-mono text-xs text-gray-600">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <span>Status: All Systems Operational</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 text-center">
+            <p className="font-mono text-xs text-gray-600">
+              [BUILD: v1.0.0] [LAST_DEPLOY: {new Date().toISOString().split('T')[0]}] [TEST_STATUS: PASSED]
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
