@@ -223,3 +223,77 @@ export async function fetchPortfolioSettings(): Promise<PortfolioSettings | null
 
   return data;
 }
+
+export async function updateHeroContent(content: Partial<HeroContent>): Promise<HeroContent | null> {
+  const { data: existing } = await supabase
+    .from('portfolio_hero')
+    .select('id')
+    .limit(1)
+    .maybeSingle();
+
+  if (existing) {
+    const { data, error } = await supabase
+      .from('portfolio_hero')
+      .update(content)
+      .eq('id', existing.id)
+      .select()
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error updating hero content:', error);
+      return null;
+    }
+
+    return data;
+  } else {
+    const { data, error } = await supabase
+      .from('portfolio_hero')
+      .insert([content])
+      .select()
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error creating hero content:', error);
+      return null;
+    }
+
+    return data;
+  }
+}
+
+export async function updateAboutContent(content: Partial<AboutContent>): Promise<AboutContent | null> {
+  const { data: existing } = await supabase
+    .from('portfolio_about')
+    .select('id')
+    .limit(1)
+    .maybeSingle();
+
+  if (existing) {
+    const { data, error } = await supabase
+      .from('portfolio_about')
+      .update(content)
+      .eq('id', existing.id)
+      .select()
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error updating about content:', error);
+      return null;
+    }
+
+    return data;
+  } else {
+    const { data, error } = await supabase
+      .from('portfolio_about')
+      .insert([content])
+      .select()
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error creating about content:', error);
+      return null;
+    }
+
+    return data;
+  }
+}
