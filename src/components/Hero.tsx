@@ -79,33 +79,33 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 max-w-5xl mx-auto text-center">
-        <div className="relative inline-block mb-8 group">
-          <div className="w-48 h-48 mx-auto rounded-full bg-gradient-to-br from-green-400 to-blue-500 p-1 group-hover:scale-105 transition-transform duration-300">
+        <div className="relative inline-block mb-8 group animate-fade-in">
+          <div className="w-48 h-48 mx-auto rounded-full bg-gradient-to-br from-green-400 to-blue-500 p-1 group-hover:scale-105 transition-transform duration-300 animate-glow-pulse">
             <div className="w-full h-full rounded-full bg-[#0a0e27] flex items-center justify-center text-6xl">
-              <Bug className="w-20 h-20 text-green-400" />
+              <Bug className="w-20 h-20 text-green-400 animate-float" />
             </div>
           </div>
           <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full animate-pulse" />
           <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-blue-500 rounded-full animate-pulse delay-100" />
         </div>
 
-        <h1 className="text-6xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-green-400 via-blue-500 to-green-400 bg-clip-text text-transparent animate-gradient">
+        <h1 className="text-6xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-green-400 via-blue-500 to-green-400 bg-clip-text text-transparent animate-gradient delay-100" style={{ animationDelay: '100ms' }}>
           {heroContent.headline}
         </h1>
 
-        <div className="font-mono text-green-400 text-sm mb-6 tracking-wider">
+        <div className="font-mono text-green-400 text-sm mb-6 tracking-wider animate-fade-in delay-200" style={{ animationDelay: '200ms' }}>
           &lt;QA_Engineer status="active" /&gt;
         </div>
 
-        <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-gray-300">
+        <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-gray-300 animate-fade-in delay-300" style={{ animationDelay: '300ms' }}>
           {heroContent.subheadline}
         </h2>
 
-        <p className="text-lg md:text-xl text-gray-400 mb-8 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-lg md:text-xl text-gray-400 mb-8 max-w-2xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '400ms' }}>
           {heroContent.description}
         </p>
 
-        <div className="flex flex-wrap gap-4 justify-center items-center">
+        <div className="flex flex-wrap gap-4 justify-center items-center animate-fade-in" style={{ animationDelay: '500ms' }}>
           <a
             href="#contact"
             onClick={(e) => {
@@ -127,7 +127,7 @@ export default function Hero() {
           </button>
         </div>
 
-        <div className="mt-16 font-mono text-xs text-gray-500">
+        <div className="mt-16 font-mono text-xs text-gray-500 animate-fade-in" style={{ animationDelay: '600ms' }}>
           <div className="flex items-center justify-center gap-2">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
             <span>System Status: All Tests Passing</span>
