@@ -18,16 +18,13 @@ function App() {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setIsAuthenticated(!!session);
-      if (!session && page === 'admin') {
-        setPage('home');
-      }
     };
 
     checkAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setIsAuthenticated(!!session);
-      if (!session && page === 'admin') {
+      if (event === 'SIGNED_OUT' && page === 'admin') {
         setPage('home');
       }
     });
