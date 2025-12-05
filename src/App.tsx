@@ -32,6 +32,17 @@ function App() {
     return () => subscription?.unsubscribe();
   }, [page]);
 
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+        setPage('admin');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
+
   if (page === 'admin') {
     if (!isAuthenticated) {
       return <AdminLogin onLoginSuccess={() => setPage('admin')} />;
@@ -48,13 +59,6 @@ function App() {
       <Education />
       <Contact />
       <Footer />
-
-      <button
-        onClick={() => setPage('admin')}
-        className="fixed bottom-6 right-6 px-4 py-2 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 rounded-lg font-semibold text-white transition-all shadow-lg hover:shadow-xl z-50 text-sm"
-      >
-        Admin
-      </button>
     </div>
   );
 }
