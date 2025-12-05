@@ -61,6 +61,7 @@ export default function Admin() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    window.location.href = '/';
   };
 
   if (loading) {
