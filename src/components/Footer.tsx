@@ -71,25 +71,26 @@ export default function Footer() {
 
   return (
     <footer className="relative py-12 px-6 border-t border-gray-800">
-      <div className="absolute inset-0 bg-[#0a0e27]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e27] via-[#0f1629] to-transparent" />
+      <div className="absolute top-0 left-0 w-96 h-96 bg-green-500/5 rounded-full blur-3xl -translate-y-1/2" />
 
       <div className="max-w-6xl mx-auto relative z-10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8 animate-slide-up" style={{ animationDelay: '200ms' }}>
           <div className="text-center md:text-left">
-            <div className="flex items-center gap-2 mb-2 justify-center md:justify-start">
-              <Terminal className="w-5 h-5 text-green-400" />
+            <div className="flex items-center gap-2 mb-2 justify-center md:justify-start animate-fade-in" style={{ animationDelay: '250ms' }}>
+              <Terminal className="w-5 h-5 text-green-400 animate-float" />
               <span className="text-xl font-bold text-white">{settings.site_title.split(' - ')[0]}</span>
             </div>
-            <p className="text-gray-400 text-sm font-mono">
+            <p className="text-gray-400 text-sm font-mono animate-slide-up" style={{ animationDelay: '300ms' }}>
               {settings.site_description}
             </p>
-            <p className="text-gray-500 text-xs mt-2">
+            <p className="text-gray-500 text-xs mt-2 animate-slide-up" style={{ animationDelay: '350ms' }}>
               Building reliable software, one test at a time
             </p>
           </div>
 
           <div className="flex items-center gap-4">
-            {socialLinks.map((link) => {
+            {socialLinks.map((link, index) => {
               const IconComponent = socialIconMap[link.icon_type] || Mail;
 
               return (
@@ -98,25 +99,26 @@ export default function Footer() {
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group p-3 bg-[#151b35] border border-gray-700 rounded-lg hover:border-blue-400 hover:bg-blue-500/10 transition-all duration-300"
+                  className="group p-3 bg-[#151b35] border border-gray-700 rounded-lg hover:border-blue-400 hover:bg-blue-500/10 transition-all duration-300 animate-bounce-in hover-lift"
+                  style={{ animationDelay: `${400 + index * 50}ms` }}
                   aria-label={link.platform}
                 >
-                  <IconComponent className="w-5 h-5 text-gray-400 group-hover:text-blue-400 transition-colors" />
+                  <IconComponent className="w-5 h-5 text-gray-400 group-hover:text-blue-400 transition-colors group-hover:scale-110" />
                 </a>
               );
             })}
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-gray-800">
+        <div className="mt-8 pt-8 border-t border-gray-800 animate-slide-up" style={{ animationDelay: '500ms' }}>
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="text-gray-500 text-sm text-center md:text-left">
+            <div className="text-gray-500 text-sm text-center md:text-left animate-fade-in" style={{ animationDelay: '550ms' }}>
               <span className="font-mono text-xs">
                 © {currentYear} {settings.site_title.split(' - ')[0]}. All rights reserved.
               </span>
             </div>
 
-            <div className="flex items-center gap-2 font-mono text-xs text-gray-600">
+            <div className="flex items-center gap-2 font-mono text-xs text-gray-600 animate-pulse" style={{ animationDelay: '600ms' }}>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                 <span>Status: All Systems Operational</span>
@@ -124,7 +126,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="mt-6 text-center">
+          <div className="mt-6 text-center animate-fade-in" style={{ animationDelay: '650ms' }}>
             <p className="font-mono text-xs text-gray-600">
               [BUILD: v1.0.0] [LAST_DEPLOY: {new Date().toISOString().split('T')[0]}] [TEST_STATUS: PASSED]
             </p>

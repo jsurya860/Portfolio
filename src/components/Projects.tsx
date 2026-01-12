@@ -129,14 +129,14 @@ export default function Projects() {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1a1f3a]/30 to-transparent" />
 
       <div className="max-w-6xl mx-auto relative z-10">
-        <div className="text-center mb-16">
-          <div className="inline-block font-mono text-sm text-purple-400 mb-3 px-4 py-2 border border-purple-400/30 rounded-full">
+        <div className="text-center mb-16 animate-slide-up">
+          <div className="inline-block font-mono text-sm text-purple-400 mb-3 px-4 py-2 border border-purple-400/30 rounded-full animate-fade-in">
             {'>'} testSuite.execute()
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-in" style={{ animationDelay: '100ms' }}>
             Project <span className="text-purple-400">Portfolio</span>
           </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-purple-400 to-pink-500 mx-auto" />
+          <div className="w-20 h-1 bg-gradient-to-r from-purple-400 to-pink-500 mx-auto animate-expand" style={{ animationDelay: '200ms' }} />
         </div>
 
         {loading ? (
@@ -145,14 +145,15 @@ export default function Projects() {
           </div>
         ) : (
           <div className="space-y-6">
-            {projects.map((project) => {
+            {projects.map((project, index) => {
               const IconComponent = iconMap[project.icon_type] || Code2;
               const colors = colorMap[project.color as keyof typeof colorMap] || colorMap.blue;
 
               return (
                 <div
                   key={project.id}
-                  className="group bg-[#151b35]/50 backdrop-blur-sm border border-gray-700 rounded-lg p-6 hover:border-purple-400/40 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10"
+                  className="group bg-[#151b35]/50 backdrop-blur-sm border border-gray-700 rounded-lg p-6 hover:border-purple-400/40 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10 animate-slide-up hover-lift"
+                  style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <div className="flex flex-col md:flex-row md:items-start gap-6">
                     <div className="md:w-16 flex-shrink-0">
@@ -164,22 +165,22 @@ export default function Projects() {
                     <div className="flex-grow">
                       <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
                         <div>
-                          <div className="font-mono text-xs text-gray-500 mb-1">
+                          <div className="font-mono text-xs text-gray-500 mb-1 animate-slide-up" style={{ animationDelay: `${index * 100 + 50}ms` }}>
                             [{project.ticket_id}]
                           </div>
-                          <h3 className="text-2xl font-bold text-white mb-2">
+                          <h3 className="text-2xl font-bold text-white mb-2 animate-slide-up" style={{ animationDelay: `${index * 100 + 100}ms` }}>
                             {project.name}
                           </h3>
-                          <div className="text-sm text-gray-400">
+                          <div className="text-sm text-gray-400 animate-slide-up" style={{ animationDelay: `${index * 100 + 150}ms` }}>
                             Role: <span className="text-purple-400 font-semibold">{project.role}</span>
                           </div>
                         </div>
 
-                        <div className="flex gap-2">
-                          <span className={`font-mono text-xs px-3 py-1 rounded-full border ${statusColors[project.priority]}`}>
+                        <div className="flex gap-2 animate-fade-in" style={{ animationDelay: `${index * 100 + 200}ms` }}>
+                          <span className={`font-mono text-xs px-3 py-1 rounded-full border ${statusColors[project.priority]} transition-all group-hover:scale-110`}>
                             {project.priority}
                           </span>
-                          <span className={`font-mono text-xs px-3 py-1 rounded-full border ${statusColors[project.status]}`}>
+                          <span className={`font-mono text-xs px-3 py-1 rounded-full border ${statusColors[project.status]} transition-all group-hover:scale-110`}>
                             ✓ {project.status}
                           </span>
                         </div>
@@ -190,9 +191,9 @@ export default function Projects() {
                           [TEST_CASES]
                         </div>
                         <ul className="space-y-2">
-                          {project.responsibilities.map((resp, index) => (
-                            <li key={index} className="flex items-start gap-3 text-gray-300">
-                              <CheckSquare className="w-4 h-4 text-green-400 flex-shrink-0 mt-1" />
+                          {project.responsibilities.map((resp, respIdx) => (
+                            <li key={respIdx} className="flex items-start gap-3 text-gray-300 animate-slide-up" style={{ animationDelay: `${index * 100 + respIdx * 30}ms` }}>
+                              <CheckSquare className="w-4 h-4 text-green-400 flex-shrink-0 mt-1 group-hover:scale-110 transition-transform" />
                               <span>{resp}</span>
                             </li>
                           ))}
@@ -203,7 +204,7 @@ export default function Projects() {
                         <div className="font-mono text-xs text-gray-500 mb-2">
                           [OUTCOME]
                         </div>
-                        <div className="bg-green-500/5 border border-green-400/20 rounded-lg p-3 text-green-400">
+                        <div className="bg-green-500/5 border border-green-400/20 rounded-lg p-3 text-green-400 group-hover:bg-green-500/10 group-hover:border-green-400/40 transition-all duration-300 animate-slide-up" style={{ animationDelay: `${index * 100 + 200}ms` }}>
                           {project.outcome}
                         </div>
                       </div>
@@ -213,10 +214,11 @@ export default function Projects() {
                           [TECH_STACK]
                         </div>
                         <div className="flex flex-wrap gap-2">
-                          {project.tools.map((tool) => (
+                          {project.tools.map((tool, toolIdx) => (
                             <span
                               key={tool}
-                              className="px-3 py-1 bg-[#0a0e27] border border-gray-700 rounded text-sm text-gray-300 hover:border-purple-400/30 hover:text-purple-400 transition-colors"
+                              className="px-3 py-1 bg-[#0a0e27] border border-gray-700 rounded text-sm text-gray-300 hover:border-purple-400/30 hover:text-purple-400 transition-all duration-300 group-hover:scale-105 animate-slide-up"
+                              style={{ animationDelay: `${index * 100 + toolIdx * 40}ms` }}
                             >
                               {tool}
                             </span>
