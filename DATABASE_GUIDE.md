@@ -248,9 +248,9 @@ Add social media and contact links.
 ```sql
 INSERT INTO portfolio_social_links (platform, url, icon_type, display_order)
 VALUES
-  ('LinkedIn', 'https://linkedin.com/in/surya', 'Linkedin', 1),
-  ('GitHub', 'https://github.com/surya', 'Github', 2),
-  ('Email', 'mailto:surya@example.com', 'Mail', 3);
+  ('LinkedIn', 'https://linkedin.com/in/jsurya860', 'Linkedin', 1),
+  ('GitHub', 'https://github.com/jsurya860', 'Github', 2),
+  ('Email', 'mailto:jsurya860@gmail.com', 'Mail', 3);
 ```
 
 **Fields:**
@@ -269,7 +269,7 @@ INSERT INTO portfolio_settings (site_title, site_description, email)
 VALUES (
   'Surya - QA Engineer',
   'Quality Assurance Engineer',
-  'surya@example.com'
+  'jsurya860@gmail.com'
 );
 ```
 

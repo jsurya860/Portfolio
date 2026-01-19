@@ -42,6 +42,8 @@ export interface AboutContent {
   tests_written: number;
   bugs_found: number;
   success_rate: number;
+  test_coverage: number;
+  projects_delivered: number;
 }
 
 export interface Skill {
@@ -87,6 +89,7 @@ export interface SocialLink {
 export interface PortfolioSettings {
   id: string;
   site_title: string;
+  site_title_alternate: string;
   site_description: string;
   email: string;
 }
@@ -95,6 +98,8 @@ export interface TechStack {
   id: string;
   name: string;
 }
+
+
 
 export async function fetchProjects(): Promise<QAProject[]> {
   const { data, error } = await supabase
@@ -209,6 +214,10 @@ export async function fetchSocialLinks(): Promise<SocialLink[]> {
   return data || [];
 }
 
+
+
+
+
 export async function fetchPortfolioSettings(): Promise<PortfolioSettings | null> {
   const { data, error } = await supabase
     .from('portfolio_settings')
@@ -297,3 +306,121 @@ export async function updateAboutContent(content: Partial<AboutContent>): Promis
     return data;
   }
 }
+
+// Generative CRUD helpers
+async function upsertItem<T>(table: string, content: Partial<T> & { id?: string }): Promise<T | null> {
+  if (content.id && !content.id.startsWith('demo-') && !content.id.startsWith('default')) {
+    const { data, error } = await supabase
+      .from(table)
+      .update(content)
+      .eq('id', content.id)
+      .select()
+      .maybeSingle();
+    if (error) {
+      console.error(`Error updating ${table}:`, error);
+      return null;
+    }
+    return data;
+  } else {
+    const { id, ...insertData } = content;
+    const { data, error } = await supabase
+      .from(table)
+      .insert([insertData])
+      .select()
+      .maybeSingle();
+    if (error) {
+      console.error(`Error inserting into ${table}:`, error);
+      return null;
+    }
+    return data;
+  }
+}
+
+async function deleteItem(table: string, id: string): Promise<boolean> {
+  const { error } = await supabase
+    .from(table)
+    .delete()
+    .eq('id', id);
+  if (error) {
+    console.error(`Error deleting from ${table}:`, error);
+    return false;
+  }
+  return true;
+}
+
+// Project CRUD
+export const upsertProject = (project: Partial<QAProject>) => upsertItem<QAProject>('qa_projects', project);
+export const deleteProject = (id: string) => deleteItem('qa_projects', id);
+
+// Achievement CRUD
+export const upsertAchievement = (achievement: Partial<Achievement>) => upsertItem<Achievement>('portfolio_achievements', achievement);
+export const deleteAchievement = (id: string) => deleteItem('portfolio_achievements', id);
+
+// Education CRUD
+export const upsertEducation = (education: Partial<Education>) => upsertItem<Education>('portfolio_education', education);
+export const deleteEducation = (id: string) => deleteItem('portfolio_education', id);
+
+// Skill CRUD
+export const upsertSkill = (skill: Partial<Skill>) => upsertItem<Skill>('portfolio_skills', skill);
+export const deleteSkill = (id: string) => deleteItem('portfolio_skills', id);
+
+// Tech Stack CRUD
+export const upsertTechStack = (tech: Partial<TechStack>) => upsertItem<TechStack>('portfolio_tech_stack', tech);
+export const deleteTechStack = (id: string) => deleteItem('portfolio_tech_stack', id);
+
+// Social Link CRUD
+export const upsertSocialLink = (link: Partial<SocialLink>) => upsertItem<SocialLink>('portfolio_social_links', link);
+export const deleteSocialLink = (id: string) => deleteItem('portfolio_social_links', id);
+
+// Settings Update
+export async function updatePortfolioSettings(settings: Partial<PortfolioSettings>): Promise<PortfolioSettings | null> {
+  const { data: existing } = await supabase
+    .from('portfolio_settings')
+    .select('id')
+    .limit(1)
+    .maybeSingle();
+
+  if (existing) {
+    const { data, error } = await supabase
+      .from('portfolio_settings')
+      .update(settings)
+      .eq('id', existing.id)
+      .select()
+      .maybeSingle();
+    if (error) return null;
+    return data;
+  } else {
+    const { data, error } = await supabase
+      .from('portfolio_settings')
+      .insert([settings])
+      .select()
+      .maybeSingle();
+    if (error) return null;
+    return data;
+  }
+}
+
+// Reset Functionality
+async function clearTableRows(table: string): Promise<boolean> {
+  const { error } = await supabase
+    .from(table)
+    .delete()
+    .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete everything (hack for Supabase delete all)
+
+  if (error) {
+    console.error(`Error clearing table ${table}:`, error);
+    return false;
+  }
+  return true;
+}
+
+export const resetHeroData = () => clearTableRows('portfolio_hero');
+export const resetAboutData = () => clearTableRows('portfolio_about');
+export const resetProjectsData = () => clearTableRows('qa_projects');
+export const resetAchievementsData = () => clearTableRows('portfolio_achievements');
+export const resetEducationData = () => clearTableRows('portfolio_education');
+export const resetSkillsData = () => clearTableRows('portfolio_skills');
+export const resetTechStackData = () => clearTableRows('portfolio_tech_stack');
+export const resetSocialLinksData = () => clearTableRows('portfolio_social_links');
+export const resetSettingsData = () => clearTableRows('portfolio_settings');
+

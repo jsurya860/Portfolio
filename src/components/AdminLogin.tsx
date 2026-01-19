@@ -1,17 +1,43 @@
 import { useState } from 'react';
-import { Lock, Mail, Loader } from 'lucide-react';
+import { Lock, Mail, Loader, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface AdminLoginProps {
   onLoginSuccess: () => void;
+  onBack: () => void;
 }
 
-export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
+export default function AdminLogin({ onLoginSuccess, onBack }: AdminLoginProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isReset, setIsReset] = useState(false);
+  const [resetMessage, setResetMessage] = useState('');
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setResetMessage('');
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin,
+      });
+
+      if (error) {
+        setError(error.message);
+      } else {
+        setResetMessage('Check your email for the password reset link');
+      }
+    } catch {
+      setError('An unexpected error occurred');
+    }
+
+    setLoading(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +66,7 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
           onLoginSuccess();
         }
       }
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred');
     }
 
@@ -48,7 +74,15 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0e27] via-[#1a1f3a] to-[#0a0e27] flex items-center justify-center px-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a0e27] via-[#1a1f3a] to-[#0a0e27] flex items-center justify-center px-6 relative">
+      <button
+        onClick={onBack}
+        className="fixed top-6 right-6 p-2 bg-gray-800/50 hover:bg-gray-700 text-gray-400 hover:text-white rounded-full transition-all duration-300 hover:rotate-90 z-50 backdrop-blur-sm border border-gray-700"
+        aria-label="Back to Home"
+      >
+        <X className="w-6 h-6" />
+      </button>
+
       <div className="w-full max-w-md">
         <div className="bg-[#1a1f3a] border border-gray-700 rounded-lg p-8">
           <div className="flex justify-center mb-8">
@@ -57,18 +91,26 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
             </div>
           </div>
 
-          <h1 className="text-3xl font-bold text-center mb-2 text-white">Admin Access</h1>
+          <h1 className="text-3xl font-bold text-center mb-2 text-white">
+            {isReset ? 'Reset Password' : 'Admin Access'}
+          </h1>
           <p className="text-center text-gray-400 mb-8">
-            {isSignUp ? 'Create your admin account' : 'Sign in to manage content'}
+            {isReset
+              ? 'Enter your email to receive a reset link'
+              : (isSignUp ? 'Create your admin account' : 'Sign in to manage content')
+            }
           </p>
 
-          {error && (
-            <div className="mb-6 p-4 bg-red-900/30 border border-red-500 rounded-lg text-red-200 text-sm">
-              {error}
+          {(error || resetMessage) && (
+            <div className={`mb-6 p-4 rounded-lg text-sm ${error
+              ? 'bg-red-900/30 border border-red-500 text-red-200'
+              : 'bg-green-900/30 border border-green-500 text-green-200'
+              }`}>
+              {error || resetMessage}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={isReset ? handleResetPassword : handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
               <div className="relative">
@@ -84,20 +126,37 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 w-5 h-5 text-gray-500" />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="w-full pl-10 pr-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-green-500"
-                  placeholder="••••••••"
-                />
+            {!isReset && (
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3 w-5 h-5 text-gray-500" />
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="w-full pl-10 pr-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-green-500"
+                    placeholder="*******"
+                  />
+                </div>
+                {!isSignUp && (
+                  <div className="flex justify-end mt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsReset(true);
+                        setError('');
+                        setResetMessage('');
+                      }}
+                      className="text-xs text-green-400 hover:text-green-300 transition-colors"
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
+                )}
               </div>
-            </div>
+            )}
 
             <button
               type="submit"
@@ -107,28 +166,42 @@ export default function AdminLogin({ onLoginSuccess }: AdminLoginProps) {
               {loading ? (
                 <>
                   <Loader className="w-5 h-5 animate-spin" />
-                  {isSignUp ? 'Creating account...' : 'Signing in...'}
+                  {isReset ? 'Sending Link...' : (isSignUp ? 'Creating account...' : 'Signing in...')}
                 </>
               ) : (
-                isSignUp ? 'Create Account' : 'Sign In'
+                isReset ? 'Send Reset Link' : (isSignUp ? 'Create Account' : 'Sign In')
               )}
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-gray-400 text-sm">
-              {isSignUp ? 'Already have an account?' : "Don't have an account?"}
+            {isReset ? (
               <button
                 type="button"
                 onClick={() => {
-                  setIsSignUp(!isSignUp);
+                  setIsReset(false);
                   setError('');
+                  setResetMessage('');
                 }}
-                className="ml-1 text-green-400 hover:text-green-300 font-semibold"
+                className="text-gray-400 hover:text-white text-sm"
               >
-                {isSignUp ? 'Sign in' : 'Create one'}
+                Back to Login
               </button>
-            </p>
+            ) : (
+              <p className="text-gray-400 text-sm">
+                {isSignUp ? 'Already have an account?' : "Don't have an account?"}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsSignUp(!isSignUp);
+                    setError('');
+                  }}
+                  className="ml-1 text-green-400 hover:text-green-300 font-semibold"
+                >
+                  {isSignUp ? 'Sign in' : 'Create one'}
+                </button>
+              </p>
+            )}
           </div>
         </div>
 

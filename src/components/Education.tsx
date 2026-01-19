@@ -1,6 +1,7 @@
-import { GraduationCap, Award, Calendar, Loader } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { GraduationCap, Award, Loader } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
 import { fetchEducation, type Education } from '../lib/supabase';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   GraduationCap,
@@ -31,42 +32,6 @@ const defaultTimeline: Education[] = [
     icon_type: 'Award',
     color: 'green',
     display_order: 2,
-  },
-  {
-    id: '3',
-    type: 'cert',
-    title: 'Selenium WebDriver with Java',
-    subtitle: 'Test Automation',
-    institution: 'Professional Development Course',
-    date: '2023',
-    version: 'v3.0',
-    icon_type: 'Award',
-    color: 'purple',
-    display_order: 3,
-  },
-  {
-    id: '4',
-    type: 'cert',
-    title: 'API Testing & Postman Certification',
-    subtitle: 'REST API Testing',
-    institution: 'Online Learning Platform',
-    date: '2023',
-    version: 'v3.1',
-    icon_type: 'Award',
-    color: 'cyan',
-    display_order: 4,
-  },
-  {
-    id: '5',
-    type: 'cert',
-    title: 'Agile Testing Certification',
-    subtitle: 'Scrum & Agile Methodologies',
-    institution: 'Agile Alliance',
-    date: '2024',
-    version: 'v4.0',
-    icon_type: 'Award',
-    color: 'yellow',
-    display_order: 5,
   },
 ];
 
@@ -106,6 +71,14 @@ const colorMap = {
 export default function Education() {
   const [timeline, setTimeline] = useState<Education[]>(defaultTimeline);
   const [loading, setLoading] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end end"]
+  });
+
+  const scaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   useEffect(() => {
     const loadEducation = async () => {
@@ -130,80 +103,90 @@ export default function Education() {
   }
 
   return (
-    <section className="py-24 px-6 relative">
-      <div className="absolute inset-0 bg-[#0f1629]" />
-
-      <div className="max-w-4xl mx-auto relative z-10">
-        <div className="text-center mb-16 animate-slide-up">
-          <div className="inline-block font-mono text-sm text-cyan-400 mb-3 px-4 py-2 border border-cyan-400/30 rounded-full animate-fade-in">
-            {'>'} history.releaseNotes.show()
+    <section id="education" ref={containerRef} className="py-24 px-6 relative bg-[#0a0e27]/80">
+      <div className="max-w-7xl mx-auto relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-24"
+        >
+          <div className="inline-block font-mono text-sm text-cyan-400 mb-3 px-4 py-2 border border-cyan-400/30 rounded-full">
+            {'>'} system.loadHistory()
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-in" style={{ animationDelay: '100ms' }}>
-            Education & <span className="text-cyan-400">Certifications</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 px-4 break-words">
+            Educational <span className="text-cyan-400">Timeline</span>
           </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto animate-expand" style={{ animationDelay: '200ms' }} />
-        </div>
+          <div className="w-20 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto" />
+        </motion.div>
 
         <div className="relative">
-          <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-cyan-400 via-purple-500 to-green-400 animate-expand-y" />
+          {/* Central Vertical Line (Desktop: 50%, Mobile: Left) */}
+          <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-0.5 bg-white/5 rounded-full" />
 
-          <div className="space-y-8">
+          {/* Animated Progress Line */}
+          <motion.div
+            style={{ scaleY }}
+            className="absolute left-4 md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-cyan-400 via-purple-500 to-green-400 origin-top z-10"
+          />
+
+          <div className="space-y-16">
             {timeline.map((item, index) => {
               const colors = colorMap[item.color as keyof typeof colorMap] || colorMap.blue;
               const IconComponent = iconMap[item.icon_type] || Award;
+              const isEven = index % 2 === 0;
 
               return (
-                <div key={item.id} className="relative pl-20 animate-slide-in-left" style={{ animationDelay: `${index * 150}ms` }}>
-                  <div className={`absolute left-5 top-6 w-6 h-6 ${colors.dot} rounded-full border-4 border-[#0f1629] animate-pulse group-hover:scale-125 transition-transform`} style={{ animationDelay: `${index * 150 + 100}ms` }} />
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, x: isEven ? -50 : 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.8, delay: 0.1 }}
+                  className={`relative flex flex-col md:flex-row items-center justify-between ${isEven ? 'md:flex-row-reverse' : ''
+                    }`}
+                >
+                  {/* Item Content Wrapper */}
+                  <div className="hidden md:block w-[45%]" />
 
-                  <div
-                    className={`group ${colors.bg} ${colors.border} border-2 rounded-lg p-6 hover:shadow-lg hover:shadow-current/10 transition-all duration-300 hover:translate-x-2 hover-lift`}
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className={`${colors.text} p-3 rounded-lg bg-[#0a0e27]/50 group-hover:scale-110 transition-transform duration-300`}>
-                        <IconComponent className="w-6 h-6 animate-fade-in" style={{ animationDelay: `${index * 150 + 50}ms` }} />
+                  {/* Dot on Timeline */}
+                  <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 top-0 md:top-8 w-8 h-8 flex items-center justify-center z-20">
+                    <div className={`w-3 h-3 ${colors.dot} rounded-full border-2 border-[#0a0e27] shadow-[0_0_10px_rgba(34,197,94,0.5)]`} />
+                  </div>
+
+                  {/* Card */}
+                  <div className="w-full md:w-[45%] pl-12 md:pl-0">
+                    <div className={`group relative p-8 bg-[#151b35]/60 backdrop-blur-xl border ${colors.border} rounded-2xl hover:bg-[#151b35] transition-all duration-500 hover:shadow-2xl hover:shadow-${item.color}-500/5 hover:-translate-y-1`}>
+                      <div className="absolute top-0 right-0 p-4 font-mono text-[10px] text-gray-600 tracking-widest uppercase">
+                        {item.type}
                       </div>
 
-                      <div className="flex-grow">
-                        <div className="flex items-start justify-between gap-4 mb-2">
-                          <div>
-                            <div className={`font-mono text-xs ${colors.text} mb-1 animate-slide-up`} style={{ animationDelay: `${index * 150 + 75}ms` }}>
-                              [{item.version}]
-                            </div>
-                            <h3 className="text-xl font-bold text-white mb-1 animate-slide-up" style={{ animationDelay: `${index * 150 + 100}ms` }}>
-                              {item.title}
-                            </h3>
-                            <div className="text-gray-400 mb-2 animate-slide-up" style={{ animationDelay: `${index * 150 + 125}ms` }}>
-                              {item.subtitle}
-                            </div>
-                          </div>
-                          <div className={`flex items-center gap-2 ${colors.text} text-sm animate-fade-in group-hover:scale-110 transition-transform`} style={{ animationDelay: `${index * 150 + 100}ms` }}>
-                            <Calendar className="w-4 h-4 group-hover:-translate-y-1 transition-transform" />
-                            {item.date}
-                          </div>
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className={`p-4 rounded-xl ${colors.bg} ${colors.text} shadow-inner`}>
+                          <IconComponent className="w-6 h-6" />
                         </div>
-
-                        <div className="text-gray-500 text-sm animate-slide-up" style={{ animationDelay: `${index * 150 + 150}ms` }}>
-                          {item.institution}
-                        </div>
+                        <div className="font-mono text-sm text-gray-500">{item.date}</div>
                       </div>
+
+                      <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 leading-tight break-words overflow-wrap-anywhere">
+                        {item.title}
+                      </h3>
+                      <div className={`text-base sm:text-lg ${colors.text} font-semibold mb-4 italic break-words overflow-wrap-anywhere`}>
+                        {item.subtitle}
+                      </div>
+                      <div className="text-gray-400 text-sm font-medium border-l-2 border-white/5 pl-4 py-1 italic whitespace-pre-wrap break-words">
+                        {item.institution}
+                      </div>
+
+                      {/* Decorative corner tag */}
+                      <div className={`absolute bottom-0 right-0 w-8 h-8 rounded-tl-full ${colors.bg} opacity-20`} />
                     </div>
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>
-        </div>
-
-        <div className="mt-12 bg-[#151b35]/50 backdrop-blur-sm border border-gray-700 rounded-lg p-6 hover-lift glow-on-hover animate-slide-up" style={{ animationDelay: '1s' }}>
-          <div className="font-mono text-xs text-gray-500 mb-4">
-            [CONTINUOUS_LEARNING]
-          </div>
-          <p className="text-gray-300 leading-relaxed animate-slide-up" style={{ animationDelay: '1.1s' }}>
-            Committed to staying current with industry best practices and emerging testing technologies.
-            Actively pursuing advanced certifications in performance testing, security testing, and
-            cloud-based test automation to deliver cutting-edge quality assurance solutions.
-          </p>
         </div>
       </div>
     </section>

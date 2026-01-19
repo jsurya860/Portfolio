@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Send, CheckCircle, AlertCircle } from 'lucide-react';
+import emailjs from '@emailjs/browser';
+import { motion } from 'framer-motion';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -13,15 +15,42 @@ export default function Contact() {
     e.preventDefault();
     setStatus('submitting');
 
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Check if configuration exists
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-    console.log('Form submitted:', formData);
-    setStatus('success');
+    if (!serviceId || !templateId || !publicKey) {
+      console.error('EmailJS configuration missing. Please check your .env file.');
+      setStatus('error');
+      alert('Email service configuration is missing. Please check the console.');
+      return;
+    }
 
-    setTimeout(() => {
-      setStatus('idle');
-      setFormData({ name: '', email: '', message: '' });
-    }, 3000);
+    try {
+      await emailjs.send(
+        serviceId,
+        templateId,
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          message: formData.message,
+          to_name: 'Surya', // Default to portfolio owner
+        },
+        publicKey
+      );
+
+      console.log('Email sent successfully');
+      setStatus('success');
+
+      setTimeout(() => {
+        setStatus('idle');
+        setFormData({ name: '', email: '', message: '' });
+      }, 3000);
+    } catch (error) {
+      console.error('Failed to send email:', error);
+      setStatus('error');
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -35,31 +64,43 @@ export default function Contact() {
     <section id="contact" className="py-24 px-6 relative">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1a1f3a]/30 to-transparent" />
 
-      <div className="max-w-4xl mx-auto relative z-10">
-        <div className="text-center mb-16 animate-slide-up">
-          <div className="inline-block font-mono text-sm text-green-400 mb-3 px-4 py-2 border border-green-400/30 rounded-full animate-fade-in">
+      <div className="max-w-5xl mx-auto relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <div className="inline-block font-mono text-sm text-green-400 mb-3 px-4 py-2 border border-green-400/30 rounded-full">
             {'>'} contact.submit()
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-in" style={{ animationDelay: '100ms' }}>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 px-4 break-words">
             Get In <span className="text-green-400">Touch</span>
           </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-green-400 to-blue-500 mx-auto mb-4 animate-expand" style={{ animationDelay: '200ms' }} />
-          <p className="text-gray-400 max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: '300ms' }}>
+          <div className="w-20 h-1 bg-gradient-to-r from-green-400 to-blue-500 mx-auto mb-4" />
+          <p className="text-sm sm:text-base text-gray-400 max-w-3xl mx-auto px-4 break-words">
             Have a project that needs quality assurance expertise? Let's discuss how I can help
             ensure your software meets the highest standards.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="bg-[#151b35]/50 backdrop-blur-sm border border-gray-700 rounded-lg p-8 hover-lift glow-on-hover animate-scale-in" style={{ animationDelay: '400ms' }}>
-          <div className="font-mono text-xs text-gray-500 mb-6 animate-fade-in" style={{ animationDelay: '450ms' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="bg-[#151b35]/50 backdrop-blur-sm border border-gray-700 rounded-lg p-8 hover-lift glow-on-hover"
+        >
+          <div className="font-mono text-xs text-gray-500 mb-6">
             [TICKET_SUBMISSION_FORM]
           </div>
 
           {status === 'success' ? (
-            <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-8 text-center animate-scale-in">
+            <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-8 text-center">
               <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4 animate-bounce" />
-              <h3 className="text-2xl font-bold text-green-400 mb-2 animate-slide-up" style={{ animationDelay: '100ms' }}>Message Sent Successfully!</h3>
-              <p className="text-gray-300 animate-slide-up" style={{ animationDelay: '150ms' }}>
+              <h3 className="text-xl sm:text-2xl font-bold text-green-400 mb-2 break-words">Message Sent Successfully!</h3>
+              <p className="text-sm sm:text-base text-gray-300 break-words">
                 Thank you for reaching out. I'll get back to you within 24 hours.
               </p>
               <div className="font-mono text-xs text-gray-500 mt-4 animate-pulse">
@@ -68,7 +109,7 @@ export default function Contact() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="animate-slide-up" style={{ animationDelay: '500ms' }}>
+              <div>
                 <label htmlFor="name" className="block text-sm font-semibold text-gray-300 mb-2">
                   <span className="text-green-400">$</span> Name
                 </label>
@@ -85,7 +126,7 @@ export default function Contact() {
                 />
               </div>
 
-              <div className="animate-slide-up" style={{ animationDelay: '550ms' }}>
+              <div>
                 <label htmlFor="email" className="block text-sm font-semibold text-gray-300 mb-2">
                   <span className="text-blue-400">$</span> Email
                 </label>
@@ -102,7 +143,7 @@ export default function Contact() {
                 />
               </div>
 
-              <div className="animate-slide-up" style={{ animationDelay: '600ms' }}>
+              <div>
                 <label htmlFor="message" className="block text-sm font-semibold text-gray-300 mb-2">
                   <span className="text-purple-400">$</span> Message
                 </label>
@@ -131,8 +172,7 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={status === 'submitting'}
-                className="w-full py-4 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg font-semibold text-white hover:shadow-lg hover:shadow-green-500/30 transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 animate-slide-up group"
-                style={{ animationDelay: '650ms' }}
+                className="w-full py-4 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg font-semibold text-white hover:shadow-lg hover:shadow-green-500/30 transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
               >
                 {status === 'submitting' ? (
                   <>
@@ -152,7 +192,7 @@ export default function Contact() {
               </div>
             </form>
           )}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

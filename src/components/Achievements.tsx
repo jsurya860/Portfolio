@@ -1,12 +1,25 @@
 import { TrendingUp, AlertCircle, CheckCircle, Clock, Loader } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { fetchAchievements, Achievement } from '../lib/supabase';
+import { fetchAchievements, fetchAboutContent, Achievement, AboutContent } from '../lib/supabase';
+import { motion } from 'framer-motion';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   TrendingUp,
   AlertCircle,
   CheckCircle,
   Clock,
+};
+
+const defaultAbout: AboutContent = {
+  id: 'default',
+  summary: '',
+  approach: '',
+  experience_years: 3,
+  tests_written: 5000,
+  bugs_found: 1200,
+  success_rate: 99.9,
+  test_coverage: 98,
+  projects_delivered: 15,
 };
 
 const defaultAchievements: Achievement[] = [
@@ -81,18 +94,26 @@ const colorMap = {
 
 export default function Achievements() {
   const [achievements, setAchievements] = useState<Achievement[]>(defaultAchievements);
+  const [about, setAbout] = useState<AboutContent>(defaultAbout);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadAchievements = async () => {
-      const data = await fetchAchievements();
-      if (data && data.length > 0) {
-        setAchievements(data);
+    const loadData = async () => {
+      const [achData, aboutData] = await Promise.all([
+        fetchAchievements(),
+        fetchAboutContent(),
+      ]);
+
+      if (achData && achData.length > 0) {
+        setAchievements(achData);
+      }
+      if (aboutData) {
+        setAbout(aboutData);
       }
       setLoading(false);
     };
 
-    loadAchievements();
+    loadData();
   }, []);
 
   if (loading) {
@@ -109,25 +130,43 @@ export default function Achievements() {
     <section className="py-24 px-6 relative">
       <div className="absolute inset-0 bg-[#0f1629]" />
 
-      <div className="max-w-6xl mx-auto relative z-10">
-        <div className="text-center mb-16">
+      <div className="max-w-7xl mx-auto relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
           <div className="inline-block font-mono text-sm text-blue-400 mb-3 px-4 py-2 border border-blue-400/30 rounded-full">
             {'>'} metrics.achievements.display()
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 px-4 break-words">
             Key <span className="text-blue-400">Achievements</span>
           </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto" />
-        </div>
+        </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={{
+            visible: { transition: { staggerChildren: 0.15 } }
+          }}
+          className="grid md:grid-cols-2 gap-6"
+        >
           {achievements.map((achievement) => {
             const colors = colorMap[achievement.color as keyof typeof colorMap] || colorMap.blue;
             const IconComponent = iconMap[achievement.icon_type] || TrendingUp;
 
             return (
-              <div
+              <motion.div
                 key={achievement.id}
+                variants={{
+                  hidden: { opacity: 0, scale: 0.8 },
+                  visible: { opacity: 1, scale: 1, transition: { type: "spring", bounce: 0.4 } }
+                }}
                 className={`group relative ${colors.bg} ${colors.border} border-2 rounded-lg p-6 hover:${colors.glow} hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}
               >
                 <div className="flex items-start justify-between mb-4">
@@ -139,47 +178,53 @@ export default function Achievements() {
                   </div>
                 </div>
 
-                <h3 className="text-xl font-bold mb-2 text-white">
+                <h3 className="text-lg sm:text-xl font-bold mb-2 text-white break-words overflow-wrap-anywhere">
                   {achievement.title}
                 </h3>
 
-                <div className={`text-2xl font-bold mb-3 ${colors.text}`}>
+                <div className={`text-xl sm:text-2xl font-bold mb-3 ${colors.text} break-words overflow-wrap-anywhere`}>
                   {achievement.metric}
                 </div>
 
-                <p className="text-gray-400 leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-400 leading-relaxed whitespace-pre-wrap break-words overflow-wrap-anywhere">
                   {achievement.description}
                 </p>
 
                 <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-current to-transparent opacity-0 group-hover:opacity-30 transition-opacity" />
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
 
-        <div className="mt-12 bg-[#151b35]/50 backdrop-blur-sm border border-gray-700 rounded-lg p-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="mt-12 bg-[#151b35]/50 backdrop-blur-sm border border-gray-700 rounded-lg p-6"
+        >
           <div className="font-mono text-xs text-gray-500 mb-4">
             [IMPACT_SUMMARY]
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
-              <div className="text-3xl font-bold text-green-400 mb-2">5000+</div>
+              <div className="text-3xl font-bold text-green-400 mb-2">{about.tests_written.toLocaleString()}+</div>
               <div className="text-sm text-gray-400">Test Cases Written</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-blue-400 mb-2">98%</div>
+              <div className="text-3xl font-bold text-blue-400 mb-2">{about.test_coverage}%</div>
               <div className="text-sm text-gray-400">Test Coverage</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-purple-400 mb-2">15+</div>
+              <div className="text-3xl font-bold text-purple-400 mb-2">{about.projects_delivered}+</div>
               <div className="text-sm text-gray-400">Projects Delivered</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-yellow-400 mb-2">99.9%</div>
+              <div className="text-3xl font-bold text-yellow-400 mb-2">{about.success_rate}%</div>
               <div className="text-sm text-gray-400">Defect Detection</div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

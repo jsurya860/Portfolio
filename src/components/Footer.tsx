@@ -12,21 +12,21 @@ const defaultSocialLinks: SocialLink[] = [
   {
     id: '1',
     platform: 'LinkedIn',
-    url: 'https://linkedin.com/in/surya',
+    url: 'https://linkedin.com/in/jsurya860',
     icon_type: 'Linkedin',
     display_order: 1,
   },
   {
     id: '2',
     platform: 'GitHub',
-    url: 'https://github.com/surya',
+    url: 'https://github.com/jsurya860',
     icon_type: 'Github',
     display_order: 2,
   },
   {
     id: '3',
     platform: 'Email',
-    url: 'mailto:surya@example.com',
+    url: 'mailto:jsurya860@gmail.com',
     icon_type: 'Mail',
     display_order: 3,
   },
@@ -36,7 +36,7 @@ const defaultSettings: PortfolioSettings = {
   id: 'default',
   site_title: 'Surya - QA Engineer',
   site_description: 'Quality Assurance Engineer',
-  email: 'surya@example.com',
+  email: 'jsurya860@gmail.com',
 };
 
 export default function Footer() {
@@ -70,18 +70,19 @@ export default function Footer() {
   }
 
   return (
-    <footer className="relative py-12 px-6 border-t border-gray-800">
+    <footer className="relative py-12 px-6 border-t border-gray-800 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e27] via-[#0f1629] to-transparent" />
-      <div className="absolute top-0 left-0 w-96 h-96 bg-green-500/5 rounded-full blur-3xl -translate-y-1/2" />
+      <div className="absolute top-0 left-0 w-96 h-96 bg-green-500/5 rounded-full blur-3xl -translate-y-1/2 animate-float" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl translate-y-1/2 animate-float-delayed" />
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 animate-slide-up" style={{ animationDelay: '200ms' }}>
           <div className="text-center md:text-left">
             <div className="flex items-center gap-2 mb-2 justify-center md:justify-start animate-fade-in" style={{ animationDelay: '250ms' }}>
-              <Terminal className="w-5 h-5 text-green-400 animate-float" />
-              <span className="text-xl font-bold text-white">{settings.site_title.split(' - ')[0]}</span>
+              <Terminal className="w-5 h-5 text-green-400 zoom-animation" />
+              <span className="text-lg sm:text-xl font-bold text-white break-words">{settings.site_title.split(' - ')[0]}</span>
             </div>
-            <p className="text-gray-400 text-sm font-mono animate-slide-up" style={{ animationDelay: '300ms' }}>
+            <p className="text-sm text-gray-400 font-mono animate-slide-up break-words" style={{ animationDelay: '300ms' }}>
               {settings.site_description}
             </p>
             <p className="text-gray-500 text-xs mt-2 animate-slide-up" style={{ animationDelay: '350ms' }}>
@@ -112,15 +113,15 @@ export default function Footer() {
 
         <div className="mt-8 pt-8 border-t border-gray-800 animate-slide-up" style={{ animationDelay: '500ms' }}>
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="text-gray-500 text-sm text-center md:text-left animate-fade-in" style={{ animationDelay: '550ms' }}>
-              <span className="font-mono text-xs">
+            <div className="text-gray-500 text-sm text-center md:text-left animate-fade-in hover:text-gray-300 transition-colors duration-300" style={{ animationDelay: '550ms' }}>
+              <span className="font-mono text-xs break-words">
                 © {currentYear} {settings.site_title.split(' - ')[0]}. All rights reserved.
               </span>
             </div>
 
             <div className="flex items-center gap-2 font-mono text-xs text-gray-600 animate-pulse" style={{ animationDelay: '600ms' }}>
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-glow-pulse" />
                 <span>Status: All Systems Operational</span>
               </div>
             </div>
