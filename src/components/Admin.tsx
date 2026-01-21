@@ -8,9 +8,10 @@ import {
   supabase, HeroContent, AboutContent, QAProject, Achievement, Education, Skill, TechStack, SocialLink, PortfolioSettings,
   fetchHeroContent, fetchAboutContent, fetchProjects, fetchAchievements, fetchEducation, fetchSkills, fetchTechStack, fetchSocialLinks, fetchPortfolioSettings,
   updateHeroContent, updateAboutContent, upsertProject, deleteProject, upsertAchievement, deleteAchievement,
-  upsertEducation, deleteEducation, upsertSkill, deleteSkill, upsertTechStack, deleteTechStack,
+  upsertEducation, deleteEducation,
   upsertSocialLink, deleteSocialLink, updatePortfolioSettings,
-  resetHeroData, resetAboutData, resetProjectsData, resetAchievementsData, resetEducationData, resetSkillsData, resetTechStackData, resetSocialLinksData, resetSettingsData
+  resetHeroData, resetAboutData, resetProjectsData, resetAchievementsData, resetEducationData, resetSkillsData, resetTechStackData, resetSocialLinksData, resetSettingsData,
+  replaceSkills, replaceTechStack
 } from '../lib/supabase';
 
 type Tab = 'hero' | 'about' | 'achievements' | 'projects' | 'education' | 'social' | 'settings';
@@ -255,6 +256,57 @@ function SectionEditor({ activeTab, data, setData, showMessage, setSaving, refre
     }
   };
 
+  const handleLocalUpsert = async (item: any, list: any[], setList: any) => {
+    // Upsert into local state only
+    if (item.id && !item.id.toString().startsWith('temp-')) {
+      // Existing item being edited
+      setList(list.map(i => i.id === item.id ? item : i));
+    } else {
+      // New item (or temp item ref)
+      const newItem = { ...item, id: item.id || `temp-${Date.now()}` };
+      setList([...list, newItem]);
+    }
+    return true; // Simulate success
+  };
+
+  const handleLocalDelete = async (id: string, list: any[], setList: any) => {
+    // Delete from local state only
+    setList(list.filter(i => i.id !== id));
+    return true; // Simulate success
+  };
+
+  const handleBatchSync = async () => {
+    setSaving(true);
+    try {
+      // 1. Save About Content
+      await updateAboutContent({
+        summary: '',
+        approach: '',
+        experience_years: 0,
+        tests_written: 0,
+        bugs_found: 0,
+        success_rate: 0,
+        test_coverage: 0,
+        projects_delivered: 0,
+        ...(data.aboutContent || {})
+      });
+
+      // 2. Batch Save Skills (Replace All)
+      await replaceSkills(data.skills);
+
+      // 3. Batch Save Tech Stack (Replace All)
+      await replaceTechStack(data.techStack);
+
+      showMessage('success', 'About section, Skills, and Tech Stack synced successfully!');
+      refresh(); // Reload from DB to get canonical IDs
+    } catch (e) {
+      console.error(e);
+      showMessage('error', 'Batch sync failed.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   switch (activeTab) {
     case 'hero':
       return (
@@ -303,7 +355,14 @@ function SectionEditor({ activeTab, data, setData, showMessage, setSaving, refre
           </div>
           <div className="flex gap-4 pt-4">
             <button
-              onClick={() => handleSave(updateHeroContent, data.heroContent)}
+              onClick={() => handleSave(updateHeroContent, {
+                headline: '',
+                subheadline: '',
+                description: '',
+                cta_text: '',
+                cta_button_text: '',
+                ...(data.heroContent || {})
+              })}
               className="flex-grow py-4 bg-green-500 text-[#0a0e27] font-bold rounded-lg hover:bg-green-400 transition-colors flex items-center justify-center gap-2"
             >
               <Save className="w-5 h-5" /> Deploy Hero Changes
@@ -398,13 +457,13 @@ function SectionEditor({ activeTab, data, setData, showMessage, setSaving, refre
               </div>
               <CRUDList
                 items={data.skills}
-                onUpsert={upsertSkill}
-                onDelete={deleteSkill}
-                refresh={() => fetchSkills().then(setData.setSkills)}
+                onUpsert={(item: any) => handleLocalUpsert(item, data.skills, setData.setSkills)}
+                onDelete={(id: string) => handleLocalDelete(id, data.skills, setData.setSkills)}
+                refresh={() => { }}
                 fields={['name', 'icon_type', 'color', 'display_order']}
                 label="Core Skill"
-                showMessage={showMessage}
-                setSaving={setSaving}
+                showMessage={null} // Suppress individual success messages
+                setSaving={null} // Suppress saving spinner
               />
             </div>
 
@@ -420,23 +479,23 @@ function SectionEditor({ activeTab, data, setData, showMessage, setSaving, refre
               </div>
               <CRUDList
                 items={data.techStack}
-                onUpsert={upsertTechStack}
-                onDelete={deleteTechStack}
-                refresh={() => fetchTechStack().then(setData.setTechStack)}
-                fields={['name', 'display_order']}
+                onUpsert={(item: any) => handleLocalUpsert(item, data.techStack, setData.setTechStack)}
+                onDelete={(id: string) => handleLocalDelete(id, data.techStack, setData.setTechStack)}
+                refresh={() => { }}
+                fields={['name']} // REMOVED display_order to fix bug
                 label="Tech Stack Item"
-                showMessage={showMessage}
-                setSaving={setSaving}
+                showMessage={null}
+                setSaving={null}
               />
             </div>
           </div>
 
           <div className="flex gap-4 pt-6 border-t border-gray-800">
             <button
-              onClick={() => handleSave(updateAboutContent, data.aboutContent)}
+              onClick={handleBatchSync}
               className="flex-grow py-4 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-400 transition-colors flex items-center justify-center gap-2"
             >
-              <Save className="w-5 h-5" /> Sync About Section
+              <Save className="w-5 h-5" /> Sync About Section (Batch)
             </button>
             <button
               onClick={() => handleReset(resetAboutData, 'About')}
@@ -571,7 +630,13 @@ function SectionEditor({ activeTab, data, setData, showMessage, setSaving, refre
           </div>
           <div className="flex gap-4">
             <button
-              onClick={() => handleSave(updatePortfolioSettings, data.settings)}
+              onClick={() => handleSave(updatePortfolioSettings, {
+                site_title: '',
+                site_title_alternate: '',
+                site_description: '',
+                email: '',
+                ...(data.settings || {})
+              })}
               className="flex-grow py-4 bg-purple-500 text-white font-bold rounded-lg hover:bg-purple-400 transition-colors flex items-center justify-center gap-2"
             >
               <Save className="w-5 h-5" /> Update Global Settings

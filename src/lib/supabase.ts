@@ -368,6 +368,43 @@ export const deleteSkill = (id: string) => deleteItem('portfolio_skills', id);
 export const upsertTechStack = (tech: Partial<TechStack>) => upsertItem<TechStack>('portfolio_tech_stack', tech);
 export const deleteTechStack = (id: string) => deleteItem('portfolio_tech_stack', id);
 
+// Batch Replace Helpers (For Skills & Tech Stack)
+export async function replaceSkills(skills: Partial<Skill>[]): Promise<boolean> {
+  // 1. Delete all existing skills
+  const deleteSuccess = await clearTableRows('portfolio_skills');
+  if (!deleteSuccess) return false;
+
+  if (skills.length === 0) return true;
+
+  // 2. Insert new skills (strip temp IDs)
+  const toInsert = skills.map(({ id, ...rest }) => rest);
+  const { error } = await supabase.from('portfolio_skills').insert(toInsert);
+
+  if (error) {
+    console.error('Error batch inserting skills:', error);
+    return false;
+  }
+  return true;
+}
+
+export async function replaceTechStack(stack: Partial<TechStack>[]): Promise<boolean> {
+  // 1. Delete all existing tech stack
+  const deleteSuccess = await clearTableRows('portfolio_tech_stack');
+  if (!deleteSuccess) return false;
+
+  if (stack.length === 0) return true;
+
+  // 2. Insert new stack (strip temp IDs)
+  const toInsert = stack.map(({ id, ...rest }) => rest);
+  const { error } = await supabase.from('portfolio_tech_stack').insert(toInsert);
+
+  if (error) {
+    console.error('Error batch inserting tech stack:', error);
+    return false;
+  }
+  return true;
+}
+
 // Social Link CRUD
 export const upsertSocialLink = (link: Partial<SocialLink>) => upsertItem<SocialLink>('portfolio_social_links', link);
 export const deleteSocialLink = (id: string) => deleteItem('portfolio_social_links', id);
