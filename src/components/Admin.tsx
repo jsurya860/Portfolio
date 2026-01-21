@@ -310,7 +310,7 @@ function SectionEditor({ activeTab, data, setData, showMessage, setSaving, refre
   switch (activeTab) {
     case 'hero':
       return (
-        <div className="bg-[#1a1f3a] rounded-xl p-6 md:p-8 border border-gray-700/50 space-y-6 shadow-xl hover:border-gray-600/50 transition-all duration-300">
+        <div className="bg-[#1a1f3a] rounded-xl p-8 border border-gray-700 space-y-6 shadow-xl hover:border-gray-600/50 transition-all duration-300">
           <div className="space-y-3">
             <label className="text-xs text-gray-500 uppercase font-mono">Headline</label>
             <input
@@ -379,7 +379,10 @@ function SectionEditor({ activeTab, data, setData, showMessage, setSaving, refre
       );
     case 'about':
       return (
-        <div className="bg-[#1a1f3a] rounded-xl p-6 md:p-8 border border-gray-700/50 space-y-6 shadow-xl hover:border-gray-600/50 transition-all duration-300">
+        <div className="bg-[#1a1f3a] rounded-xl p-8 border border-gray-700 space-y-6 shadow-xl hover:border-gray-600/50 transition-all duration-300">
+          <div className="flex justify-between items-center mb-6 h-9">
+            <h3 className="text-lg font-bold text-gray-200">About Management</h3>
+          </div>
           <div className="space-y-3">
             <label className="text-xs text-gray-500 uppercase font-mono">Profile Summary</label>
             <textarea
@@ -446,15 +449,6 @@ function SectionEditor({ activeTab, data, setData, showMessage, setSaving, refre
           </div>
           <div className="pt-8 border-t border-gray-800 space-y-8">
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-bold text-gray-400 uppercase font-mono tracking-widest">Core Competencies</h4>
-                <button
-                  onClick={() => handleReset(resetSkillsData, 'Skills')}
-                  className="px-3 py-1 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg text-xs font-mono transition-all"
-                >
-                  RESET SKILLS
-                </button>
-              </div>
               <CRUDList
                 items={data.skills}
                 onUpsert={(item: any) => handleLocalUpsert(item, data.skills, setData.setSkills)}
@@ -462,28 +456,39 @@ function SectionEditor({ activeTab, data, setData, showMessage, setSaving, refre
                 refresh={() => { }}
                 fields={['name', 'icon_type', 'color', 'display_order']}
                 label="Core Skill"
-                showMessage={null} // Suppress individual success messages
-                setSaving={null} // Suppress saving spinner
+                title="Core Competencies"
+                embedded={true}
+                extraActions={
+                  <button
+                    onClick={() => handleReset(resetSkillsData, 'Skills')}
+                    className="px-3 py-1 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg text-xs font-mono transition-all"
+                  >
+                    RESET
+                  </button>
+                }
+                showMessage={null}
+                setSaving={null}
               />
             </div>
 
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-bold text-gray-400 uppercase font-mono tracking-widest">Technology Stack</h4>
-                <button
-                  onClick={() => handleReset(resetTechStackData, 'Tech Stack')}
-                  className="px-3 py-1 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg text-xs font-mono transition-all"
-                >
-                  RESET TECH
-                </button>
-              </div>
               <CRUDList
                 items={data.techStack}
                 onUpsert={(item: any) => handleLocalUpsert(item, data.techStack, setData.setTechStack)}
                 onDelete={(id: string) => handleLocalDelete(id, data.techStack, setData.setTechStack)}
                 refresh={() => { }}
-                fields={['name']} // REMOVED display_order to fix bug
+                fields={['name']}
                 label="Tech Stack Item"
+                title="Technology Stack"
+                embedded={true}
+                extraActions={
+                  <button
+                    onClick={() => handleReset(resetTechStackData, 'Tech Stack')}
+                    className="px-3 py-1 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg text-xs font-mono transition-all"
+                  >
+                    RESET
+                  </button>
+                }
                 showMessage={null}
                 setSaving={null}
               />
@@ -656,7 +661,7 @@ function SectionEditor({ activeTab, data, setData, showMessage, setSaving, refre
   }
 }
 
-function CRUDList({ items, onUpsert, onDelete, refresh, fields, label, showMessage, setSaving }: any) {
+function CRUDList({ items, onUpsert, onDelete, refresh, fields, label, showMessage, setSaving, title, embedded, extraActions }: any) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState<any>({});
 
@@ -708,12 +713,20 @@ function CRUDList({ items, onUpsert, onDelete, refresh, fields, label, showMessa
   };
 
   return (
-    <div className="bg-[#1a1f3a] rounded-xl p-8 border border-gray-700">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-lg font-bold text-gray-200">{label}s Management</h3>
-        <button onClick={handleCreate} className="px-4 py-2 bg-green-500 text-[#0a0e27] rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-green-400 transition-all">
-          <Plus className="w-4 h-4" /> Add New
-        </button>
+    <div className={embedded ? "space-y-3" : "bg-[#1a1f3a] rounded-xl p-8 border border-gray-700"}>
+      <div className={`flex justify-between items-center ${embedded ? 'mb-2' : 'mb-6'}`}>
+        <h3 className={embedded ? "text-sm font-bold text-gray-400 uppercase font-mono tracking-widest" : "text-lg font-bold text-gray-200"}>
+          {title || `${label}s Management`}
+        </h3>
+        <div className="flex items-center gap-2">
+          {extraActions}
+          <button onClick={handleCreate} className={`
+            ${embedded ? 'px-3 py-1 text-xs' : 'px-4 py-2 text-sm'} 
+            bg-green-500 text-[#0a0e27] rounded-lg font-bold flex items-center gap-2 hover:bg-green-400 transition-all
+          `}>
+            <Plus className={embedded ? "w-3 h-3" : "w-4 h-4"} /> {embedded ? 'Add' : 'Add New'}
+          </button>
+        </div>
       </div>
 
       <div className="space-y-3">
