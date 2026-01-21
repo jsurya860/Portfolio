@@ -15,6 +15,8 @@ import ResetPassword from './components/ResetPassword';
 import SystemIntro from './components/SystemIntro';
 import FloatingElements from './components/FloatingElements';
 
+
+
 function App() {
   const [page, setPage] = useState<'home' | 'admin' | 'reset-password'>('home');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -58,11 +60,12 @@ function App() {
     if (!isAuthenticated) {
       return <AdminLogin onLoginSuccess={() => setPage('admin')} onBack={() => setPage('home')} />;
     }
-    return <Admin onBack={() => setPage('home')} />;
+    return <Admin />;
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0e27] text-gray-100 selection:bg-green-500/30">
+    <div className="min-h-screen bg-primary text-primary selection:bg-accent-primary/30 transition-colors duration-300">
+
       <SystemIntro />
       <FloatingElements />
       <SmoothScroll />

@@ -1,4 +1,4 @@
-import { Linkedin, Github, Mail, Terminal, Loader } from 'lucide-react';
+import { Linkedin, Github, Mail, Terminal, Loader, Twitter, Facebook, Instagram, Youtube, Globe } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { fetchSocialLinks, fetchPortfolioSettings, SocialLink, PortfolioSettings } from '../lib/supabase';
 
@@ -6,6 +6,11 @@ const socialIconMap: Record<string, React.ComponentType<{ className?: string }>>
   Linkedin,
   Github,
   Mail,
+  Twitter,
+  Facebook,
+  Instagram,
+  Youtube,
+  Globe,
 };
 
 const defaultSocialLinks: SocialLink[] = [
@@ -35,6 +40,7 @@ const defaultSocialLinks: SocialLink[] = [
 const defaultSettings: PortfolioSettings = {
   id: 'default',
   site_title: 'Surya - QA Engineer',
+  site_title_alternate: 'QA Engineer',
   site_description: 'Quality Assurance Engineer',
   email: 'jsurya860@gmail.com',
 };
