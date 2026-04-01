@@ -103,7 +103,7 @@ export default function Education() {
   }
 
   return (
-    <section id="education" ref={containerRef} className="py-24 px-6 relative bg-[#0a0e27]/80">
+    <section id="education" ref={containerRef} className="py-24 px-6 relative bg-[#F8FAFC] dark:bg-[#0F172A]">
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -112,23 +112,21 @@ export default function Education() {
           transition={{ duration: 0.6 }}
           className="text-center mb-24"
         >
-          <div className="inline-block font-mono text-sm text-cyan-400 mb-3 px-4 py-2 border border-cyan-400/30 rounded-full">
-            {'>'} system.loadHistory()
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 px-4 break-words">
-            Educational <span className="text-cyan-400">Timeline</span>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 px-4 break-words text-[#0F172A] dark:text-[#E5E7EB]">
+            Educational <span className="text-[#2563EB] dark:text-[#3B82F6]">Timeline</span>
           </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto" />
+          <div className="w-20 h-1 bg-gradient-to-r from-[#2563EB] to-[#6366F1] dark:from-[#3B82F6] dark:to-[#6366F1] mx-auto" />
         </motion.div>
 
         <div className="relative">
           {/* Central Vertical Line (Desktop: 50%, Mobile: Left) */}
-          <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-0.5 bg-white/5 rounded-full" />
+          <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-0.5 rounded-full bg-[#E2E8F0] dark:bg-[rgba(255,255,255,0.05)]" />
 
           {/* Animated Progress Line */}
           <motion.div
             style={{ scaleY }}
-            className="absolute left-4 md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-cyan-400 via-purple-500 to-green-400 origin-top z-10"
+            className="absolute left-4 md:left-1/2 md:-translate-x-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#22C55E] via-[#3B82F6] to-[#6366F1] dark:from-[#22C55E] dark:via-[#3B82F6] dark:to-[#6366F1] origin-top z-10"
           />
 
           <div className="space-y-16">
@@ -152,13 +150,13 @@ export default function Education() {
 
                   {/* Dot on Timeline */}
                   <div className="absolute left-4 md:left-1/2 md:-translate-x-1/2 top-0 md:top-8 w-8 h-8 flex items-center justify-center z-20">
-                    <div className={`w-3 h-3 ${colors.dot} rounded-full border-2 border-[#0a0e27] shadow-[0_0_10px_rgba(34,197,94,0.5)]`} />
+                      <div className={`w-3 h-3 ${colors.dot} rounded-full border-2 border-[#F8FAFC] dark:border-[#0F172A] shadow-[0_0_10px_rgba(34,197,94,0.4)]`} />
                   </div>
 
                   {/* Card */}
                   <div className="w-full md:w-[45%] pl-12 md:pl-0">
-                    <div className={`group relative p-8 bg-[#151b35]/60 backdrop-blur-xl border ${colors.border} rounded-2xl hover:bg-[#151b35] transition-all duration-500 hover:shadow-2xl hover:shadow-${item.color}-500/5 hover:-translate-y-1`}>
-                      <div className="absolute top-0 right-0 p-4 font-mono text-[10px] text-gray-600 tracking-widest uppercase">
+                      <div className={`group relative p-8 glass-card rounded-2xl hover:border-[var(--accent-secondary)] transition-all duration-400 hover:shadow-[0_8px_32px_var(--glow-blue)] hover:-translate-y-1.5`}>
+                      <div className="absolute top-0 right-0 p-4 font-mono text-[10px] text-[#9CA3AF] dark:text-[#6B7280] tracking-widest uppercase">
                         {item.type}
                       </div>
 
@@ -169,13 +167,13 @@ export default function Education() {
                         <div className="font-mono text-sm text-gray-500">{item.date}</div>
                       </div>
 
-                      <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 leading-tight break-words overflow-wrap-anywhere">
+                        <h3 className="text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-[#E5E7EB] mb-2 leading-tight break-words overflow-wrap-anywhere">
                         {item.title}
                       </h3>
                       <div className={`text-base sm:text-lg ${colors.text} font-semibold mb-4 italic break-words overflow-wrap-anywhere`}>
                         {item.subtitle}
                       </div>
-                      <div className="text-gray-400 text-sm font-medium border-l-2 border-white/5 pl-4 py-1 italic whitespace-pre-wrap break-words">
+                      <div className="text-[#475569] dark:text-[#9CA3AF] text-sm font-medium border-l-2 border-[#E2E8F0] dark:border-[rgba(255,255,255,0.08)] pl-4 py-1 italic whitespace-pre-wrap break-words">
                         {item.institution}
                       </div>
 

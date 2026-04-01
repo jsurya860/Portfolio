@@ -48,9 +48,9 @@ export default function ResetPassword({ onSuccess }: ResetPasswordProps) {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#0a0e27] via-[#1a1f3a] to-[#0a0e27] flex items-center justify-center px-6">
+        <div className="min-h-screen bg-gradient-to-br from-[#0F172A] via-[#111827] to-[#0F172A] flex items-center justify-center px-6">
             <div className="w-full max-w-md">
-                <div className="bg-[#1a1f3a] border border-gray-700 rounded-lg p-8">
+                <div className="bg-[#111827] border border-gray-700 rounded-lg p-8">
                     <div className="flex justify-center mb-8">
                         <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-blue-500 rounded-lg flex items-center justify-center">
                             <Key className="w-8 h-8 text-white" />

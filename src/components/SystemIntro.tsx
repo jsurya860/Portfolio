@@ -1,100 +1,86 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
-
-const STARTUP_LOGS = [
-    'INITIALIZING_CORE_SYSTEMS...',
-    'SCANNING_UI_COMPONENTS...',
-    'CONNECTING_DATABASE_PORTALS...',
-    'OPTIMIZING_LAYOUT_MATRICES...',
-    'USER_IDENTITY_VERIFIED: SURYA',
-    'SYSTEM_STATUS: READY'
-];
+import { useTheme } from '../contexts/ThemeContext';
 
 export default function SystemIntro() {
-    const [isActive, setIsActive] = useState(true);
-    const [logIndex, setLogIndex] = useState(0);
+  const [isActive, setIsActive] = useState(true);
+  const { isDark } = useTheme();
 
-    useEffect(() => {
-        // Progress through logs
-        const logInterval = setInterval(() => {
-            setLogIndex(prev => (prev < STARTUP_LOGS.length - 1 ? prev + 1 : prev));
-        }, 300);
+  useEffect(() => {
+    const timer = setTimeout(() => setIsActive(false), 1800);
+    return () => clearTimeout(timer);
+  }, []);
 
-        // End sequence after fixed time
-        const timer = setTimeout(() => setIsActive(false), 2500);
+  const bg          = isDark ? '#0F172A' : '#F8FAFC';
+  const badgeBg     = isDark ? 'rgba(76,175,122,0.12)' : '#DCEFE4';
+  const badgeBorder = isDark ? 'rgba(76,175,122,0.30)' : '#CFE5D8';
+  const textPrimary = isDark ? '#F1F5F9' : '#1F2937';
+  const textSub     = isDark ? '#9CA3AF' : '#4B5563';
+  const trackBg     = isDark ? '#1E293B' : '#E5E7EB';
 
-        return () => {
-            clearInterval(logInterval);
-            clearTimeout(timer);
-        };
-    }, []);
+  return (
+    <AnimatePresence>
+      {isActive && (
+        <motion.div
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5, ease: 'easeInOut' }}
+          className="fixed inset-0 z-[10000] flex flex-col items-center justify-center"
+          style={{ backgroundColor: bg }}
+          aria-hidden="true"
+        >
+          {/* Initials badge */}
+          <motion.div
+            initial={{ scale: 0.75, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.45, ease: [0.34, 1.56, 0.64, 1] }}
+            className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5"
+            style={{ background: badgeBg, border: `1px solid ${badgeBorder}` }}
+          >
+            <span className="text-2xl font-black" style={{ color: '#4CAF7A' }}>SJ</span>
+          </motion.div>
 
-    return (
-        <AnimatePresence>
-            {isActive && (
-                <motion.div
-                    initial={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-[10000] bg-[#0a0e27] flex items-center justify-center overflow-hidden"
-                >
-                    {/* Scanning Beam */}
-                    <motion.div
-                        initial={{ left: '-10%', opacity: 0 }}
-                        animate={{ left: '110%', opacity: [0, 1, 1, 0.5] }}
-                        transition={{ duration: 2.2, ease: [0.16, 1, 0.3, 1], repeat: 0 }}
-                        className="absolute top-0 w-2 h-full bg-green-400/20 blur-xl z-20"
-                    />
-                    <motion.div
-                        initial={{ left: '-10%', opacity: 0 }}
-                        animate={{ left: '110%', opacity: [0, 1, 1, 0.8] }}
-                        transition={{ duration: 2.2, ease: [0.16, 1, 0.3, 1], repeat: 0 }}
-                        className="absolute top-0 w-px h-full bg-green-400 z-30 shadow-[0_0_20px_rgba(16,185,129,0.5)]"
-                    />
+          {/* Name */}
+          <motion.p
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.2 }}
+            className="text-base font-semibold mb-1"
+            style={{ color: textPrimary }}
+          >
+            Surya Joshi
+          </motion.p>
 
-                    {/* Technical Info Center */}
-                    <div className="relative z-10 text-center">
-                        <motion.div
-                            animate={{ opacity: [0.5, 1, 0.5] }}
-                            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                            className="mb-8"
-                        >
-                            <div className="text-green-500 font-mono text-sm tracking-[0.3em] uppercase mb-2">
-                                Diagnostic_Sequence_01
-                            </div>
-                            <div className="h-1 w-64 bg-green-500/10 mx-auto rounded-full overflow-hidden">
-                                <motion.div
-                                    initial={{ width: '0%' }}
-                                    animate={{ width: '100%' }}
-                                    transition={{ duration: 2.2, ease: [0.16, 1, 0.3, 1] }}
-                                    className="h-full bg-green-500 shadow-[0_0_10px_#10b981]"
-                                />
-                            </div>
-                        </motion.div>
+          {/* Role */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.35, delay: 0.32 }}
+            className="text-sm mb-8"
+            style={{ color: textSub }}
+          >
+            QA Engineer
+          </motion.p>
 
-                        {/* Dynamic Logs */}
-                        <div className="font-mono text-[10px] text-green-500/60 text-left h-24 overflow-hidden max-w-xs mx-auto">
-                            {STARTUP_LOGS.slice(0, logIndex + 1).map((log, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ opacity: 0, x: -10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    className="mb-1"
-                                >
-                                    {`> ${log}`}
-                                </motion.div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Background Grid */}
-                    <div className="absolute inset-0 opacity-10 pointer-events-none"
-                        style={{
-                            backgroundImage: 'radial-gradient(#10b981 1px, transparent 1px)',
-                            backgroundSize: '40px 40px'
-                        }}
-                    />
-                </motion.div>
-            )}
-        </AnimatePresence>
-    );
+          {/* Progress bar */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="w-40 h-0.5 rounded-full overflow-hidden"
+            style={{ background: trackBg }}
+          >
+            <motion.div
+              initial={{ width: '0%' }}
+              animate={{ width: '100%' }}
+              transition={{ duration: 1.1, ease: 'easeInOut', delay: 0.45 }}
+              className="h-full rounded-full"
+              style={{ background: 'linear-gradient(90deg, #4CAF7A, #22C55E)' }}
+            />
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 }
+

@@ -14,6 +14,8 @@ import AdminLogin from './components/AdminLogin';
 import ResetPassword from './components/ResetPassword';
 import SystemIntro from './components/SystemIntro';
 import FloatingElements from './components/FloatingElements';
+import Experience from './components/Experience';
+import ThemeToggle from './components/ThemeToggle';
 
 
 
@@ -42,6 +44,12 @@ function App() {
   }, [page]);
 
   useEffect(() => {
+    // Check for admin URL parameter (mobile access)
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('admin') === 'true') {
+      setPage('admin');
+    }
+
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.altKey && (e.key === 'a' || e.key === 'A')) {
         setPage('admin');
@@ -65,7 +73,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-primary text-primary selection:bg-accent-primary/30 transition-colors duration-300">
-
+      <ThemeToggle />
       <SystemIntro />
       <FloatingElements />
       <SmoothScroll />
@@ -73,6 +81,7 @@ function App() {
       <Hero />
       <About />
       <Achievements />
+      <Experience />
       <Projects />
       <Education />
       <Contact />

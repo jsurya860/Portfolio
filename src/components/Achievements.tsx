@@ -15,80 +15,80 @@ const defaultAbout: AboutContent = {
   summary: '',
   approach: '',
   experience_years: 3,
-  tests_written: 5000,
-  bugs_found: 1200,
+  tests_written: 1000,
+  bugs_found: 150,
   success_rate: 99.9,
-  test_coverage: 98,
-  projects_delivered: 15,
+  test_coverage: 92,
+  projects_delivered: 20,
 };
 
 const defaultAchievements: Achievement[] = [
   {
     id: '1',
-    title: 'Test Coverage Improvement',
-    metric: '45% Increase',
-    description: 'Elevated automated test coverage from 53% to 98% across critical user flows',
-    icon_type: 'TrendingUp',
+    title: 'Microsoft Learn Student Ambassador',
+    metric: 'Beta Level',
+    description: 'Recognized for building technical communities, leading workshops, and mentoring peers in technology.',
+    icon_type: 'CheckCircle',
     color: 'green',
-    status: 'VERIFIED',
+    status: 'ACTIVE',
     display_order: 1,
   },
   {
     id: '2',
-    title: 'Bug Detection Rate',
-    metric: '1200+ Critical Bugs',
-    description: 'Identified and documented pre-production defects, preventing costly production incidents',
-    icon_type: 'AlertCircle',
-    color: 'red',
-    status: 'RESOLVED',
+    title: 'Leapfrog Student Partner',
+    metric: 'Partner',
+    description: 'Served as campus technology influencer, connecting students with industry resources and opportunities.',
+    icon_type: 'TrendingUp',
+    color: 'blue',
+    status: 'VERIFIED',
     display_order: 2,
   },
   {
     id: '3',
-    title: 'Release Cycle Time',
-    metric: '30% Reduction',
-    description: 'Streamlined testing process through automation, accelerating time-to-market',
+    title: 'Workshop Leadership',
+    metric: '15+ Sessions',
+    description: 'Organized and led technical workshops and knowledge-sharing sessions on campus.',
     icon_type: 'Clock',
-    color: 'blue',
-    status: 'OPTIMIZED',
+    color: 'purple',
+    status: 'COMPLETED',
     display_order: 3,
   },
   {
     id: '4',
-    title: 'Zero Production Failures',
-    metric: '18 Consecutive Releases',
-    description: 'Maintained perfect production stability through comprehensive regression testing',
-    icon_type: 'CheckCircle',
-    color: 'purple',
-    status: 'ACHIEVED',
+    title: 'Good Mentor Certification',
+    metric: 'Certified',
+    description: 'Earned "Being a Good Mentor" certification for excellence in knowledge transfer and student empowerment.',
+    icon_type: 'AlertCircle',
+    color: 'red',
+    status: 'EARNED',
     display_order: 4,
   },
 ];
 
 const colorMap = {
   green: {
-    bg: 'bg-green-500/10',
-    border: 'border-green-500/30',
-    text: 'text-green-400',
-    glow: 'shadow-green-500/20',
+    bg: 'bg-[rgba(22,163,74,0.08)] dark:bg-[rgba(34,197,94,0.08)]',
+    border: 'border-[rgba(76,175,122,0.25)] dark:border-[rgba(34,197,94,0.25)]',
+    text: 'text-[#4CAF7A] dark:text-[#22C55E]',
+    hoverShadow: 'hover:shadow-[rgba(76,175,122,0.12)]',
   },
   red: {
     bg: 'bg-red-500/10',
-    border: 'border-red-500/30',
+    border: 'border-red-500/25',
     text: 'text-red-400',
-    glow: 'shadow-red-500/20',
+    hoverShadow: 'hover:shadow-red-500/10',
   },
   blue: {
     bg: 'bg-blue-500/10',
-    border: 'border-blue-500/30',
+    border: 'border-blue-500/25',
     text: 'text-blue-400',
-    glow: 'shadow-blue-500/20',
+    hoverShadow: 'hover:shadow-blue-500/10',
   },
   purple: {
     bg: 'bg-purple-500/10',
-    border: 'border-purple-500/30',
+    border: 'border-purple-500/25',
     text: 'text-purple-400',
-    glow: 'shadow-purple-500/20',
+    hoverShadow: 'hover:shadow-purple-500/10',
   },
 };
 
@@ -127,9 +127,7 @@ export default function Achievements() {
   }
 
   return (
-    <section className="py-24 px-6 relative">
-      <div className="absolute inset-0 bg-[#0f1629]" />
-
+    <section id="achievements" className="py-24 px-6 relative bg-[#F4F7F5] dark:bg-[#111827]">
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -138,13 +136,10 @@ export default function Achievements() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <div className="inline-block font-mono text-sm text-blue-400 mb-3 px-4 py-2 border border-blue-400/30 rounded-full">
-            {'>'} metrics.achievements.display()
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 px-4 break-words">
-            Key <span className="text-blue-400">Achievements</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 px-4 text-primary">
+            Key <span className="text-accent-primary">Achievements</span>
           </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto" />
+          <div className="w-12 h-0.5 bg-accent-primary mx-auto" />
         </motion.div>
 
         <motion.div
@@ -154,7 +149,7 @@ export default function Achievements() {
           variants={{
             visible: { transition: { staggerChildren: 0.15 } }
           }}
-          className="grid md:grid-cols-2 gap-6"
+          className="grid md:grid-cols-2 gap-5"
         >
           {achievements.map((achievement) => {
             const colors = colorMap[achievement.color as keyof typeof colorMap] || colorMap.blue;
@@ -164,33 +159,31 @@ export default function Achievements() {
               <motion.div
                 key={achievement.id}
                 variants={{
-                  hidden: { opacity: 0, scale: 0.8 },
-                  visible: { opacity: 1, scale: 1, transition: { type: "spring", bounce: 0.4 } }
+                  hidden: { opacity: 0, y: 24 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
                 }}
-                className={`group relative ${colors.bg} ${colors.border} border-2 rounded-lg p-6 hover:${colors.glow} hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}
+                className={`group relative glass-card rounded-2xl p-6 hover:border-[var(--accent-primary)] hover:shadow-[0_8px_32px_var(--glow-green)] transition-all duration-300 hover:-translate-y-1.5`}
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className={`${colors.text} p-3 rounded-lg bg-[#0a0e27]/50 group-hover:scale-110 transition-transform duration-300`}>
-                    <IconComponent className="w-6 h-6" />
+                  <div className={`${colors.text} p-2.5 rounded-xl ${colors.bg} shrink-0`}>
+                    <IconComponent className="w-5 h-5" />
                   </div>
-                  <div className={`font-mono text-xs px-3 py-1 rounded-full ${colors.bg} ${colors.border} border ${colors.text}`}>
-                    [{achievement.status}]
+                  <div className={`font-mono text-xs px-3 py-1 rounded-full ${colors.bg} border ${colors.border} ${colors.text}`}>
+                    {achievement.status}
                   </div>
                 </div>
 
-                <h3 className="text-lg sm:text-xl font-bold mb-2 text-white break-words overflow-wrap-anywhere">
+                <h3 className="text-base sm:text-lg font-bold mb-2 text-primary break-words">
                   {achievement.title}
                 </h3>
 
-                <div className={`text-xl sm:text-2xl font-bold mb-3 ${colors.text} break-words overflow-wrap-anywhere`}>
+                <div className={`text-xl sm:text-2xl font-black mb-3 ${colors.text}`}>
                   {achievement.metric}
                 </div>
 
-                <p className="text-sm sm:text-base text-gray-400 leading-relaxed whitespace-pre-wrap break-words overflow-wrap-anywhere">
+                <p className="text-sm text-secondary leading-relaxed break-words">
                   {achievement.description}
                 </p>
-
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-current to-transparent opacity-0 group-hover:opacity-30 transition-opacity" />
               </motion.div>
             );
           })}
@@ -201,27 +194,25 @@ export default function Achievements() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-12 bg-[#151b35]/50 backdrop-blur-sm border border-gray-700 rounded-lg p-6"
+          className="mt-10 glass-card rounded-2xl p-6"
         >
-          <div className="font-mono text-xs text-gray-500 mb-4">
-            [IMPACT_SUMMARY]
-          </div>
+          <h4 className="text-xs font-semibold text-[#9CA3AF] dark:text-[#6B7280] uppercase tracking-widest mb-6">Impact Summary</h4>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
-              <div className="text-3xl font-bold text-green-400 mb-2">{about.tests_written.toLocaleString()}+</div>
-              <div className="text-sm text-gray-400">Test Cases Written</div>
+              <div className="text-3xl font-black mb-1" style={{ color: '#4CAF7A' }}>{about.test_coverage}%</div>
+              <div className="text-sm text-[#6B7280] dark:text-[#6B7280]">Test Coverage</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-blue-400 mb-2">{about.test_coverage}%</div>
-              <div className="text-sm text-gray-400">Test Coverage</div>
+              <div className="text-3xl font-black mb-1" style={{ color: '#4CAF7A' }}>{about.bugs_found}+</div>
+              <div className="text-sm text-[#6B7280] dark:text-[#6B7280]">Bugs Resolved</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-purple-400 mb-2">{about.projects_delivered}+</div>
-              <div className="text-sm text-gray-400">Projects Delivered</div>
+              <div className="text-3xl font-black mb-1" style={{ color: '#6366F1' }}>40%↑</div>
+              <div className="text-sm text-[#6B7280] dark:text-[#6B7280]">Automation Gain</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-yellow-400 mb-2">{about.success_rate}%</div>
-              <div className="text-sm text-gray-400">Defect Detection</div>
+              <div className="text-3xl font-black text-primary mb-1">{about.projects_delivered}+</div>
+              <div className="text-sm text-[#6B7280] dark:text-[#6B7280]">Projects Delivered</div>
             </div>
           </div>
         </motion.div>

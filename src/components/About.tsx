@@ -1,4 +1,4 @@
-import { CheckCircle2, Code2, Shield, Zap, Bug, BarChart3, Loader } from 'lucide-react';
+﻿import { CheckCircle2, Code2, Shield, Zap, Bug, BarChart3, Loader } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { fetchAboutContent, fetchSkills, fetchTechStack, AboutContent, Skill, TechStack } from '../lib/supabase';
 import { motion } from 'framer-motion';
@@ -17,24 +17,24 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 const defaultSkills: Skill[] = [
-  { id: '1', name: 'Manual Testing', icon_type: 'CheckCircle2', color: 'green', display_order: 1 },
-  { id: '2', name: 'Test Automation', icon_type: 'Code2', color: 'blue', display_order: 2 },
-  { id: '3', name: 'Selenium & Java', icon_type: 'Zap', color: 'yellow', display_order: 3 },
-  { id: '4', name: 'API Testing', icon_type: 'BarChart3', color: 'purple', display_order: 4 },
-  { id: '5', name: 'Defect Management', icon_type: 'Bug', color: 'red', display_order: 5 },
-  { id: '6', name: 'Security Testing', icon_type: 'Shield', color: 'cyan', display_order: 6 },
+  { id: '1', name: 'Community Leadership', icon_type: 'CheckCircle2', color: 'green', display_order: 1 },
+  { id: '2', name: 'Technical Mentorship', icon_type: 'Zap', color: 'blue', display_order: 2 },
+  { id: '3', name: 'Test Automation', icon_type: 'Code2', color: 'yellow', display_order: 3 },
+  { id: '4', name: 'Manual Testing', icon_type: 'Bug', color: 'purple', display_order: 4 },
+  { id: '5', name: 'SQL & DB Testing', icon_type: 'BarChart3', color: 'red', display_order: 5 },
+  { id: '6', name: 'Performance Testing', icon_type: 'Shield', color: 'cyan', display_order: 6 },
 ];
 
 const defaultAboutContent: AboutContent = {
   id: 'default',
-  summary: 'Results-driven QA Engineer with a passion for delivering flawless software experiences. I specialize in designing comprehensive test strategies that catch critical bugs before they reach production, ensuring every release meets the highest quality standards.',
-  approach: 'My methodology combines meticulous manual testing with powerful automation frameworks to create robust, scalable testing solutions. I believe quality isn\'t just about finding bugs—it\'s about preventing them through strategic planning and continuous improvement.',
+  summary: 'Results-driven IT student and aspiring QA Engineer with a strong background in community leadership and technical mentorship. Currently pursuing a Bachelor of Information Technology at Tribhuvan University. As a Microsoft Learn Student Ambassador and Leapfrog Student Partner, I have a proven track record of building technical communities and organizing workshops.',
+  approach: 'My methodology focuses on community-driven learning and meticulous quality assurance. I believe in bridging the gap between academic learning and industry practice through hands-on experience and knowledge sharing. I am passionate about delivering reliable software experiences and fostering collaborative learning environments.',
   experience_years: 3,
-  tests_written: 5000,
-  bugs_found: 1200,
-  success_rate: 99.7,
-  test_coverage: 98,
-  projects_delivered: 15,
+  tests_written: 1000,
+  bugs_found: 150,
+  success_rate: 99.9,
+  test_coverage: 92,
+  projects_delivered: 20,
 };
 
 const colorClasses: Record<string, string> = {
@@ -84,8 +84,8 @@ export default function About() {
   const displayTechStack = techStack.length > 0 ? techStack.map((t) => t.name) : defaultTechStack;
 
   return (
-    <section id="about" className="py-24 px-6 relative">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1a1f3a]/30 to-transparent" />
+    <section id="about" className="py-24 px-6 relative bg-[#F8FAFC] dark:bg-[#0F172A]">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#F1F5F9]/30 to-transparent dark:via-[#111827]/20 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
@@ -95,97 +95,77 @@ export default function About() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <div className="inline-block font-mono text-sm text-green-400 mb-3 px-4 py-2 border border-green-400/30 rounded-full">
-            {'>'} system.about.load()
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 px-4 break-words">
-            About <span className="text-green-400">Me</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 px-4 text-primary">
+            About <span className="text-accent-primary">Me</span>
           </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-green-400 to-blue-500 mx-auto" />
+          <div className="w-12 h-0.5 bg-accent-primary mx-auto" />
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid md:grid-cols-2 gap-8 items-start">
+          {/* Left column */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="space-y-6"
+            className="space-y-5"
           >
-            <div className="bg-[#151b35]/50 backdrop-blur-sm border border-green-400/20 rounded-lg p-6 hover:border-green-400/40 transition-all duration-300">
-              <div className="font-mono text-xs text-gray-500 mb-3">
-                [PROFILE_SUMMARY]
-              </div>
-              <p className="text-sm sm:text-base text-gray-300 leading-relaxed whitespace-pre-wrap break-words overflow-wrap-anywhere">
+            <div className="glass-card rounded-2xl p-6 hover:border-[var(--accent-primary)] transition-all duration-300 group">
+              <h4 className="text-xs font-semibold text-[#9CA3AF] dark:text-[#6B7280] uppercase tracking-widest mb-3">Summary</h4>
+              <p className="text-sm sm:text-base text-[#475569] dark:text-[#D1D5DB] leading-relaxed break-words">
                 {aboutContent.summary}
               </p>
             </div>
 
-            <div className="bg-[#151b35]/50 backdrop-blur-sm border border-blue-400/20 rounded-lg p-6 hover:border-blue-400/40 transition-all duration-300">
-              <div className="font-mono text-xs text-gray-500 mb-3">
-                [APPROACH]
-              </div>
-              <p className="text-sm sm:text-base text-gray-300 leading-relaxed whitespace-pre-wrap break-words overflow-wrap-anywhere">
+            <div className="glass-card rounded-2xl p-6 hover:border-[var(--accent-primary)] transition-all duration-300 group">
+              <h4 className="text-xs font-semibold text-[#9CA3AF] dark:text-[#6B7280] uppercase tracking-widest mb-3">Approach</h4>
+              <p className="text-sm sm:text-base text-[#475569] dark:text-[#D1D5DB] leading-relaxed break-words">
                 {aboutContent.approach}
               </p>
             </div>
 
-            <div className="bg-[#151b35]/50 backdrop-blur-sm border border-purple-400/20 rounded-lg p-6 hover:border-purple-400/40 transition-all duration-300 font-mono text-sm">
-              <div className="text-gray-500 mb-2">$ qa --version</div>
-              <div className="text-green-400">
-                Experience: {aboutContent.experience_years}+ years<br />
-                Tests_Written: {aboutContent.tests_written.toLocaleString()}+<br />
-                Bugs_Found: {aboutContent.bugs_found.toLocaleString()}+<br />
-                Success_Rate: {aboutContent.success_rate}%<br />
-                Test_Coverage: {aboutContent.test_coverage}%<br />
-                Projects: {aboutContent.projects_delivered}+
-              </div>
-            </div>
           </motion.div>
 
+          {/* Right column */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <div className="bg-[#151b35]/50 backdrop-blur-sm border border-gray-700 rounded-lg p-8">
-              <h3 className="text-xl sm:text-2xl font-bold mb-6 text-green-400 break-words">Core Competencies</h3>
+            <div className="glass-card rounded-2xl p-8">
+              <h3 className="text-lg font-bold mb-6 text-primary">Core Competencies</h3>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {skills.map((skill) => {
                   const IconComponent = iconMap[skill.icon_type] || CheckCircle2;
-                  const colorClass = colorClasses[skill.color as keyof typeof colorClasses] || 'text-green-400';
+                  const colorClass = colorClasses[skill.color as keyof typeof colorClasses] || 'text-[#22C55E]';
 
                   return (
                     <div
                       key={skill.id}
-                      className="group flex items-center gap-4 p-4 rounded-lg bg-[#0a0e27]/50 border border-gray-800 hover:border-green-400/30 transition-all duration-300 hover:translate-x-2 overflow-hidden"
+                      className="group flex items-center gap-3 p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-[rgba(255,255,255,0.03)] border border-[var(--border-color)] hover:bg-[#F1F5F9] dark:hover:bg-[rgba(255,255,255,0.06)] hover:border-[var(--accent-primary)] dark:hover:shadow-[0_0_12px_var(--glow-green)] transition-all duration-250"
                     >
-                      <div className={`${colorClass} group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}>
-                        <IconComponent className="w-6 h-6" />
+                      <div className={`${colorClass} shrink-0`}>
+                        <IconComponent className="w-5 h-5" />
                       </div>
-                      <span className="text-sm sm:text-base font-semibold text-gray-300 group-hover:text-white transition-colors break-words" title={skill.name}>
+                      <span className="text-sm font-medium text-[#0F172A] dark:text-[#D1D5DB] group-hover:text-[#0F172A] dark:group-hover:text-[#E5E7EB] transition-colors break-words">
                         {skill.name}
                       </span>
-                      <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                        <CheckCircle2 className="w-5 h-5 text-green-400" />
-                      </div>
                     </div>
                   );
                 })}
               </div>
 
-              <div className="mt-8 pt-6 border-t border-gray-800">
-                <div className="font-mono text-xs text-gray-500 mb-3">
-                  [TECH_STACK]
-                </div>
-                <div className="flex flex-wrap gap-2 pr-2">
+              <div className="mt-8 pt-6 border-t border-card">
+                <h4 className="text-xs font-semibold text-[#9CA3AF] dark:text-[#6B7280] uppercase tracking-widest mb-4">
+                  Tech Stack
+                </h4>
+                <div className="flex flex-wrap gap-2">
                   {displayTechStack.map((tech) => (
                     <span
                       key={tech}
-                      className="px-3 py-1 bg-[#0a0e27] border border-green-400/30 rounded text-sm text-green-400 hover:bg-green-400/10 transition-colors whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]"
-                      title={tech}
+                      className="px-3 py-1 bg-[#F8FAFC] dark:bg-[rgba(255,255,255,0.04)] border border-[var(--border-color)] rounded-lg text-sm text-[#0F172A] dark:text-[#D1D5DB] hover:bg-[#EFF6FF] dark:hover:bg-[rgba(59,130,246,0.08)] hover:border-[#2563EB] dark:hover:border-[#3B82F6] hover:text-[#2563EB] dark:hover:text-[#60A5FA] transition-all duration-200"
                     >
                       {tech}
                     </span>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Lock, Mail, Loader, X } from 'lucide-react';
+import { Lock, Mail, Loader, X, Sun, Moon } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface AdminLoginProps {
   onLoginSuccess: () => void;
@@ -8,6 +9,7 @@ interface AdminLoginProps {
 }
 
 export default function AdminLogin({ onLoginSuccess, onBack }: AdminLoginProps) {
+  const { isDark, toggle } = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -74,27 +76,37 @@ export default function AdminLogin({ onLoginSuccess, onBack }: AdminLoginProps) 
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0e27] via-[#1a1f3a] to-[#0a0e27] flex items-center justify-center px-6 relative">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] flex items-center justify-center px-6 relative">
+      {/* Back button */}
       <button
         onClick={onBack}
-        className="fixed top-6 right-6 p-2 bg-gray-800/50 hover:bg-gray-700 text-gray-400 hover:text-white rounded-full transition-all duration-300 hover:rotate-90 z-50 backdrop-blur-sm border border-gray-700"
+        className="fixed top-6 right-6 p-2 bg-[rgba(240,253,244,0.5)] dark:bg-[rgba(19,28,46,0.5)] hover:bg-[#F1F5F9] dark:hover:bg-[#111827] text-[#475569] dark:text-[#9CA3AF] hover:text-[#0F172A] dark:hover:text-[#E5E7EB] rounded-full transition-all duration-300 hover:rotate-90 z-50 backdrop-blur-sm border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)]"
         aria-label="Back to Home"
       >
         <X className="w-6 h-6" />
       </button>
 
+      {/* Theme toggle */}
+      <button
+        onClick={toggle}
+        className="fixed top-6 left-6 p-2 bg-[rgba(240,253,244,0.5)] dark:bg-[rgba(19,28,46,0.5)] hover:bg-[#F1F5F9] dark:hover:bg-[#111827] text-[#475569] dark:text-[#9CA3AF] hover:text-[#22c55e] dark:hover:text-emerald-400 rounded-full transition-all z-50 backdrop-blur-sm border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)]"
+        title={isDark ? 'Switch to Day Mode' : 'Switch to Night Mode'}
+      >
+        {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+      </button>
+
       <div className="w-full max-w-md">
-        <div className="bg-[#1a1f3a] border border-gray-700 rounded-lg p-8">
+        <div className="bg-[#F1F5F9] dark:bg-[#111827] border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] rounded-lg p-8">
           <div className="flex justify-center mb-8">
             <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-blue-500 rounded-lg flex items-center justify-center">
               <Lock className="w-8 h-8 text-white" />
             </div>
           </div>
 
-          <h1 className="text-3xl font-bold text-center mb-2 text-white">
+          <h1 className="text-3xl font-bold text-center mb-2 text-[#0F172A] dark:text-[#E5E7EB]">
             {isReset ? 'Reset Password' : 'Admin Access'}
           </h1>
-          <p className="text-center text-gray-400 mb-8">
+          <p className="text-center text-[#475569] dark:text-[#9CA3AF] mb-8">
             {isReset
               ? 'Enter your email to receive a reset link'
               : (isSignUp ? 'Create your admin account' : 'Sign in to manage content')
@@ -112,15 +124,15 @@ export default function AdminLogin({ onLoginSuccess, onBack }: AdminLoginProps) 
 
           <form onSubmit={isReset ? handleResetPassword : handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+              <label className="block text-sm font-medium text-[#475569] dark:text-[#D1D5DB] mb-2">Email</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 w-5 h-5 text-gray-500" />
+                <Mail className="absolute left-3 top-3 w-5 h-5 text-[#6B7280] dark:text-[#6B7280]" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-10 pr-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-green-500"
+                  className="w-full pl-10 pr-4 py-2 bg-[#F8FAFC] dark:bg-[#0F172A] border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] rounded-lg text-[#0F172A] dark:text-[#E5E7EB] focus:outline-none focus:border-green-500"
                   placeholder="your@email.com"
                 />
               </div>
@@ -128,15 +140,15 @@ export default function AdminLogin({ onLoginSuccess, onBack }: AdminLoginProps) 
 
             {!isReset && (
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                <label className="block text-sm font-medium text-[#475569] dark:text-[#D1D5DB] mb-2">Password</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3 w-5 h-5 text-gray-500" />
+                  <Lock className="absolute left-3 top-3 w-5 h-5 text-[#6B7280] dark:text-[#6B7280]" />
                   <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="w-full pl-10 pr-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-green-500"
+                    className="w-full pl-10 pr-4 py-2 bg-[#F8FAFC] dark:bg-[#0F172A] border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] rounded-lg text-[#0F172A] dark:text-[#E5E7EB] focus:outline-none focus:border-green-500"
                     placeholder="*******"
                   />
                 </div>
@@ -183,12 +195,12 @@ export default function AdminLogin({ onLoginSuccess, onBack }: AdminLoginProps) 
                   setError('');
                   setResetMessage('');
                 }}
-                className="text-gray-400 hover:text-white text-sm"
+                className="text-[#9CA3AF] dark:text-[#9CA3AF] hover:text-[#0F172A] dark:hover:text-[#E5E7EB] text-sm"
               >
                 Back to Login
               </button>
             ) : (
-              <p className="text-gray-400 text-sm">
+              <p className="text-[#475569] dark:text-[#9CA3AF] text-sm">
                 {isSignUp ? 'Already have an account?' : "Don't have an account?"}
                 <button
                   type="button"
@@ -205,7 +217,7 @@ export default function AdminLogin({ onLoginSuccess, onBack }: AdminLoginProps) 
           </div>
         </div>
 
-        <div className="mt-8 text-center text-gray-500 text-sm">
+        <div className="mt-8 text-center text-[#374151] dark:text-[#6B7280] text-sm">
           <p>This area is for authorized users only.</p>
           <p>Only registered admin users can access this panel.</p>
         </div>

@@ -126,9 +126,7 @@ export default function Projects() {
   }, []);
 
   return (
-    <section id="projects" className="py-24 px-6 relative">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1a1f3a]/30 to-transparent" />
-
+    <section id="projects" className="py-24 px-6 relative bg-[#F4F7F5] dark:bg-[#111827]">
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -137,18 +135,15 @@ export default function Projects() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <div className="inline-block font-mono text-sm text-purple-400 mb-3 px-4 py-2 border border-purple-400/30 rounded-full">
-            {'>'} testSuite.execute()
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 px-4 break-words">
-            Project <span className="text-purple-400">Portfolio</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 px-4 text-primary">
+            Project <span className="text-accent-primary">Portfolio</span>
           </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-purple-400 to-pink-500 mx-auto" />
+          <div className="w-12 h-0.5 bg-accent-primary mx-auto" />
         </motion.div>
 
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader className="w-8 h-8 text-purple-400 animate-spin" />
+            <Loader className="w-8 h-8 text-zinc-400 animate-spin" />
           </div>
         ) : (
           <motion.div
@@ -156,9 +151,9 @@ export default function Projects() {
             whileInView="visible"
             viewport={{ once: true, margin: "-50px" }}
             variants={{
-              visible: { transition: { staggerChildren: 0.1 } }
+              visible: { transition: { staggerChildren: 0.08 } }
             }}
-            className="space-y-6"
+            className="space-y-5"
           >
             {projects.map((project) => {
               const IconComponent = iconMap[project.icon_type] || Code2;
@@ -168,88 +163,61 @@ export default function Projects() {
                 <motion.div
                   key={project.id}
                   variants={{
-                    hidden: { opacity: 0, scale: 0.95, y: 30 },
-                    visible: {
-                      opacity: 1,
-                      scale: 1,
-                      y: 0,
-                      transition: {
-                        type: "spring",
-                        damping: 20,
-                        stiffness: 100,
-                      }
-                    }
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
                   }}
-                  className="group bg-[#151b35]/50 backdrop-blur-sm border border-gray-700 rounded-lg p-6 hover:border-purple-400/40 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10 hover-lift"
+                  className="group glass-card rounded-2xl p-6 hover:border-[var(--accent-secondary)] hover:shadow-[0_8px_32px_var(--glow-blue)] transition-all duration-300 hover:-translate-y-1.5"
                 >
-                  <div className="flex flex-col md:flex-row md:items-start gap-6">
-                    <div className="md:w-16 flex-shrink-0">
-                      <div className={`w-16 h-16 ${colors} border rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                        <IconComponent className="w-8 h-8" />
+                  <div className="flex flex-col md:flex-row md:items-start gap-5">
+                    <div className="md:w-14 shrink-0">
+                      <div className={`w-12 h-12 ${colors} border rounded-xl flex items-center justify-center`}>
+                        <IconComponent className="w-6 h-6" />
                       </div>
                     </div>
 
                     <div className="flex-grow">
-                      <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
+                      <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
                         <div>
-                          <div className="font-mono text-xs text-gray-500 mb-1">
-                            [{project.ticket_id}]
-                          </div>
-                          <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 break-words overflow-wrap-anywhere">
+                          <h3 className="text-lg sm:text-xl font-bold text-primary break-words">
                             {project.name}
                           </h3>
-                          <div className="text-sm text-gray-400 break-words overflow-wrap-anywhere">
-                            Role: <span className="text-purple-400 font-semibold">{project.role}</span>
+                          <div className="text-sm text-[#6B7280] dark:text-[#6B7280] mt-0.5">
+                            {project.role}
                           </div>
                         </div>
 
-                        <div className="flex gap-2">
-                          <span className={`font-mono text-xs px-3 py-1 rounded-full border ${statusColors[project.priority]} transition-all group-hover:scale-110 break-words`}>
+                        <div className="flex gap-2 flex-wrap">
+                          <span className={`text-xs px-2.5 py-1 rounded-full border font-medium ${statusColors[project.priority]}`}>
                             {project.priority}
                           </span>
-                          <span className={`font-mono text-xs px-3 py-1 rounded-full border ${statusColors[project.status]} transition-all group-hover:scale-110 break-words`}>
-                            ✓ {project.status}
+                          <span className={`text-xs px-2.5 py-1 rounded-full border font-medium ${statusColors[project.status]}`}>
+                            {project.status}
                           </span>
                         </div>
                       </div>
 
-                      <div className="mb-4">
-                        <div className="font-mono text-xs text-gray-500 mb-2">
-                          [TEST_CASES]
-                        </div>
-                        <ul className="space-y-2">
-                          {project.responsibilities.map((resp, respIdx) => (
-                            <li key={respIdx} className="flex items-start gap-3 text-gray-300">
-                              <CheckSquare className="w-4 h-4 text-green-400 flex-shrink-0 mt-1 group-hover:scale-110 transition-transform" />
-                              <span className="whitespace-pre-wrap break-words overflow-wrap-anywhere">{resp}</span>
-                            </li>
-                          ))}
-                        </ul>
+                      <ul className="space-y-1.5 mb-4">
+                        {project.responsibilities.map((resp, respIdx) => (
+                          <li key={respIdx} className="flex items-start gap-2.5 text-secondary text-sm">
+                            <CheckSquare className="w-3.5 h-3.5 text-[#4CAF7A] dark:text-[#22C55E] shrink-0 mt-1" />
+                            <span className="break-words">{resp}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      <div className="bg-[#EEFAF3] dark:bg-[rgba(34,197,94,0.06)] border border-[#CFE5D8] dark:border-[rgba(34,197,94,0.2)] rounded-xl p-3 text-sm text-[#4CAF7A] dark:text-[#4ADE80] mb-4 break-words">
+                        {project.outcome}
                       </div>
 
-                      <div className="mb-4">
-                        <div className="font-mono text-xs text-gray-500 mb-2">
-                          [OUTCOME]
-                        </div>
-                        <div className="bg-green-500/5 border border-green-400/20 rounded-lg p-3 text-sm sm:text-base text-green-400 group-hover:bg-green-500/10 group-hover:border-green-400/40 transition-all duration-300 whitespace-pre-wrap break-words overflow-wrap-anywhere">
-                          {project.outcome}
-                        </div>
-                      </div>
-
-                      <div>
-                        <div className="font-mono text-xs text-gray-500 mb-2">
-                          [TECH_STACK]
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {project.tools.map((tool) => (
-                            <span
-                              key={tool}
-                              className="px-3 py-1 bg-[#0a0e27] border border-gray-700 rounded text-sm text-gray-300 hover:border-purple-400/30 hover:text-purple-400 transition-all duration-300 group-hover:scale-105 break-words"
-                            >
-                              {tool}
-                            </span>
-                          ))}
-                        </div>
+                      <div className="flex flex-wrap gap-2">
+                        {project.tools.map((tool) => (
+                          <span
+                            key={tool}
+                            className="px-2.5 py-1 bg-[#F8FAFC] dark:bg-[rgba(255,255,255,0.04)] border border-[var(--border-color)] rounded-lg text-xs text-secondary hover:bg-[#EFF6FF] dark:hover:bg-[rgba(59,130,246,0.08)] hover:border-[#2563EB] dark:hover:border-[#3B82F6] hover:text-[#2563EB] dark:hover:text-[#60A5FA] transition-all duration-200"
+                          >
+                            {tool}
+                          </span>
+                        ))}
                       </div>
                     </div>
                   </div>
