@@ -144,7 +144,7 @@ export default function Hero() {
           </a>
 
           <a
-            href="/Surya_CV.pdf"
+            href="Surya_CV.pdf"
             download="Surya_CV.pdf"
             className="w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 border-2 border-green-500/50 text-green-400 rounded-xl font-black text-base sm:text-lg flex items-center justify-center gap-2 hover:bg-blue-500/10 hover:border-blue-500 hover:text-blue-400 transition-all duration-300 backdrop-blur-md group"
           >
