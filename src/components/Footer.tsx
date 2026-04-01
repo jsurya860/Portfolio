@@ -76,100 +76,66 @@ export default function Footer() {
   }
 
   return (
-    <footer className="relative py-16 px-6 border-t border-card bg-primary overflow-hidden">
+    <footer className="relative py-10 px-6 border-t border-card bg-primary overflow-hidden">
 
-      {/* Ambient glows */}
+      {/* Ambient glow */}
       <div className="absolute top-0 left-0 w-96 h-96 rounded-full blur-3xl -translate-y-1/2 pointer-events-none opacity-40 dark:opacity-20"
-        style={{ background: 'radial-gradient(circle, rgba(76,175,122,0.14), transparent 70%)' }} />
-      <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full blur-3xl translate-y-1/2 pointer-events-none opacity-30 dark:opacity-15"
-        style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.12), transparent 70%)' }} />
+        style={{ background: 'radial-gradient(circle, rgba(76,175,122,0.12), transparent 70%)' }} />
 
       <div className="max-w-7xl mx-auto relative z-10">
 
-        {/* ── Main three-column row ── */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-6 items-start">
+        {/* ── Main row: brand left | socials right ── */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
 
-          {/* Brand col */}
-          <div className="flex flex-col items-center md:items-start text-center md:text-left">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+          {/* Brand + tagline */}
+          <div className="flex flex-col items-center sm:items-start gap-1">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
                 style={{ background: 'rgba(76,175,122,0.12)', border: '1px solid rgba(76,175,122,0.25)' }}>
-                <Terminal className="w-4 h-4 text-[#4CAF7A] dark:text-[#22C55E]" />
+                <Terminal className="w-3.5 h-3.5 text-[#4CAF7A] dark:text-[#22C55E]" />
               </div>
-              <span className="text-base font-bold text-primary tracking-tight">
+              <span className="text-sm font-bold text-primary tracking-tight">
                 {settings.site_title.split(' - ')[0]}
               </span>
             </div>
-            <p className="text-sm font-medium text-[#4B5563] dark:text-[#9CA3AF]">
-              {settings.site_description}
-            </p>
-            <p className="text-xs text-[#9CA3AF] dark:text-[#6B7280] mt-1.5 italic leading-relaxed">
-              Building reliable software,<br className="hidden md:block" /> one test at a time.
+            <p className="text-xs text-[#4B5563] dark:text-[#9CA3AF]">{settings.site_description}</p>
+            <p className="text-[11px] text-[#9CA3AF] dark:text-[#6B7280] italic">
+              Building reliable software, one test at a time.
             </p>
           </div>
 
-          {/* Quick links col */}
-          <div className="flex flex-col items-center gap-4">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#9CA3AF] dark:text-[#4B5563]">
-              Quick Links
-            </p>
-            <nav className="flex flex-wrap justify-center gap-x-7 gap-y-2">
-              {['About', 'Projects', 'Experience', 'Education', 'Contact'].map((label) => (
+          {/* Social icons */}
+          <div className="flex items-center gap-2.5">
+            {socialLinks.map((link) => {
+              const IconComponent = socialIconMap[link.icon_type] || Mail;
+              return (
                 <a
-                  key={label}
-                  href={`#${label.toLowerCase()}`}
-                  className="text-sm text-[#6B7280] dark:text-[#6B7280] hover:text-[#4CAF7A] dark:hover:text-[#22C55E] transition-colors duration-150"
+                  key={link.id}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2.5 glass-card rounded-xl hover:border-[var(--accent-primary)] hover:shadow-[0_0_14px_var(--glow-green)] transition-all duration-200 group"
+                  aria-label={link.platform}
                 >
-                  {label}
+                  <IconComponent className="w-4 h-4 text-[#9CA3AF] group-hover:text-[#4CAF7A] dark:group-hover:text-[#22C55E] transition-colors" />
                 </a>
-              ))}
-            </nav>
-          </div>
-
-          {/* Connect col */}
-          <div className="flex flex-col items-center md:items-end gap-4">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#9CA3AF] dark:text-[#4B5563]">
-              Connect
-            </p>
-            <div className="flex items-center gap-3">
-              {socialLinks.map((link) => {
-                const IconComponent = socialIconMap[link.icon_type] || Mail;
-                return (
-                  <a
-                    key={link.id}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2.5 glass-card rounded-xl hover:border-[var(--accent-primary)] hover:shadow-[0_0_14px_var(--glow-green)] hover:text-[#4CAF7A] dark:hover:text-[#22C55E] transition-all duration-200 group"
-                    aria-label={link.platform}
-                  >
-                    <IconComponent className="w-4 h-4 text-[#9CA3AF] group-hover:text-[#4CAF7A] dark:group-hover:text-[#22C55E] transition-colors" />
-                  </a>
-                );
-              })}
-            </div>
-            <p className="text-xs text-[#C4C4C4] dark:text-[#4B5563]">
-              {settings.email}
-            </p>
+              );
+            })}
           </div>
         </div>
 
         {/* ── Bottom bar ── */}
-        <div className="mt-12 pt-6 border-t border-[#E2E8F0] dark:border-[rgba(91,130,186,0.08)]">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="mt-8 pt-5 border-t border-[#E2E8F0] dark:border-[rgba(91,130,186,0.08)]">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
             <span className="text-xs text-[#9CA3AF] dark:text-[#4B5563]">
               © {currentYear} {settings.site_title.split(' - ')[0]}. All rights reserved.
             </span>
-            <div className="flex items-center gap-4 text-xs text-[#9CA3AF] dark:text-[#4B5563]">
-              <div className="flex items-center gap-1.5">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4CAF7A] dark:bg-[#22C55E] opacity-60" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#4CAF7A] dark:bg-[#22C55E]" />
-                </span>
-                <span>All systems operational</span>
-              </div>
-              <span className="hidden sm:inline text-[#D1D5DB] dark:text-[#374151]">·</span>
-              <span className="hidden sm:inline">Crafted with precision &amp; care</span>
+            <div className="flex items-center gap-1.5 text-xs text-[#9CA3AF] dark:text-[#4B5563]">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4CAF7A] dark:bg-[#22C55E] opacity-60" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#4CAF7A] dark:bg-[#22C55E]" />
+              </span>
+              <span>All systems operational</span>
             </div>
           </div>
         </div>
