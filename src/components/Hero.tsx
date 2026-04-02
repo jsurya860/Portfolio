@@ -252,8 +252,8 @@ export default function Hero() {
                 <ArrowRight className="w-4 h-4" />
               </a>
               <a
-                href="/Surya_CV.pdf"
-                download="Surya_CV.pdf"
+                href="/assets/docs/surya-cv.pdf"
+                download="surya-cv.pdf"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm
                   border border-[#2563EB]/50 text-[#2563EB] hover:bg-[#EFF6FF] hover:border-[#2563EB] hover:shadow-[0_4px_14px_rgba(37,99,235,0.18)]
                   dark:border-[#3B82F6]/40 dark:text-[#3B82F6] dark:hover:bg-[rgba(59,130,246,0.08)] dark:hover:border-[#3B82F6] dark:hover:shadow-[0_4px_14px_rgba(59,130,246,0.22)]

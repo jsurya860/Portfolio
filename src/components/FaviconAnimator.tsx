@@ -19,14 +19,14 @@ export default function FaviconAnimator() {
         document.getElementsByTagName('head')[0].appendChild(link);
 
         const frames = [
-            '/bug-icon-0.svg',
-            '/bug-icon-1.svg',
-            '/bug-icon-2.svg',
-            '/bug-icon-3.svg',
-            '/bug-icon-4.svg',
-            '/bug-icon-3.svg',
-            '/bug-icon-2.svg',
-            '/bug-icon-1.svg',
+            '/assets/icons/bug-icon-0.svg',
+            '/assets/icons/bug-icon-1.svg',
+            '/assets/icons/bug-icon-2.svg',
+            '/assets/icons/bug-icon-3.svg',
+            '/assets/icons/bug-icon-4.svg',
+            '/assets/icons/bug-icon-3.svg',
+            '/assets/icons/bug-icon-2.svg',
+            '/assets/icons/bug-icon-1.svg',
         ];
 
         let frameIndex = 0;
