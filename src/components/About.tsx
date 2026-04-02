@@ -80,14 +80,14 @@ const defaultSkills: Skill[] = [
 
 const defaultAboutContent: AboutContent = {
   id: 'default',
-  summary: 'Results-driven IT student and aspiring QA Engineer with a strong background in community leadership and technical mentorship. Currently pursuing a Bachelor of Information Technology at Tribhuvan University. As a Microsoft Learn Student Ambassador and Leapfrog Student Partner, I have a proven track record of building technical communities and organizing workshops.',
-  approach: 'My methodology focuses on community-driven learning and meticulous quality assurance. I believe in bridging the gap between academic learning and industry practice through hands-on experience and knowledge sharing. I am passionate about delivering reliable software experiences and fostering collaborative learning environments.',
-  experience_years: 3,
-  tests_written: 1000,
-  bugs_found: 150,
-  success_rate: 99.9,
-  test_coverage: 92,
-  projects_delivered: 20,
+  summary: `Hi! I’m Surya Joshi — an IT undergraduate from Tribhuvan University with a strong passion for Quality Assurance, technology, and meaningful user experiences. I build expertise in manual testing, API validation and testing, and REST APIs, while actively learning test automation with Selenium. I enjoy exploring new tools, sharing what I learn, and contributing to better product quality.`,
+  approach: `I focus on practical quality assurance across UI, API and backend layers: clear test case design, careful validation, and effective communication with developers and stakeholders. I prefer hands-on learning, knowledge sharing, and incremental automation to improve product quality and reduce release risk.`,
+  experience_years: 1,
+  tests_written: 200,
+  bugs_found: 75,
+  success_rate: 99.0,
+  test_coverage: 85,
+  projects_delivered: 6,
 };
 
 const colorClasses: Record<string, string> = {

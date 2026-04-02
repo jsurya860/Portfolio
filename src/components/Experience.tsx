@@ -12,23 +12,45 @@ interface Experience {
 const defaultExperience: Experience[] = [
     {
         id: '1',
-        company: 'Microsoft Learn Student Ambassadors',
-        role: 'Student Ambassador',
-        duration: 'Oct 2022 – Jun 2025',
+        company: 'CloudTech',
+        role: 'Associate QA Engineer',
+        duration: 'June 2025 - Present',
         description: [
-            'Built and led technical communities on campus, organizing workshops and knowledge-sharing sessions',
-            'Mentored fellow students in technology and career development, fostering collaborative learning environment',
-            'Earned "Being a Good Mentor" certification, demonstrating commitment to knowledge transfer and student empowerment',
+            'Working on software testing across various layers of the QA process including UI, API, backend, security and performance testing.',
+            'Worked on real-world modules like invoice generation, group invoice generation, auto-termination flows, and sync scripts.',
+            'Wrote test cases, reported defects, and collaborated closely with developers, BAs, and senior QA engineers in an Agile environment.',
+            'Key tools: Postman, Selenium, Burp Suite, ZAP, JMeter. Presented a knowledge-sharing session on OWASP and ZAP.',
         ],
     },
     {
         id: '2',
+        company: 'CloudTech',
+        role: 'Quality Assurance Intern',
+        duration: 'Feb 2025 - June 2025',
+        description: [
+            'Hands-on internship focusing on manual testing initially, then expanding into API, backend, security and performance testing.',
+            'Conducted UI and database level verification, wrote test scenarios, and supported release validation.',
+            'Improved testing processes and gained exposure to production-grade QA practices.',
+        ],
+    },
+    {
+        id: '3',
+        company: 'Microsoft Learn Student Ambassadors',
+        role: 'Student Ambassador',
+        duration: 'Oct 2022 - Jun 2025',
+        description: [
+            'Built and led technical communities on campus, organizing workshops and knowledge-sharing sessions.',
+            'Mentored fellow students in technology and career development, fostering collaborative learning environments.',
+        ],
+    },
+    {
+        id: '4',
         company: 'Leapfrog Technology, Inc.',
         role: 'Leapfrog Student Partner',
-        duration: 'Apr 2023 – Dec 2023',
+        duration: 'Apr 2023 - Dec 2023',
         description: [
-            'Served as campus technology influencer, connecting students with industry opportunities and career resources',
-            'Engaged tech community through events and initiatives, bridging gap between academic learning and industry practice',
+            'Served as a campus technology influencer, connecting students with industry opportunities and resources.',
+            'Engaged the tech community through events and initiatives.',
         ],
     },
 ];
