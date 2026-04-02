@@ -16,11 +16,25 @@ export default function Contact() {
     email: '',
     subject: 'collaboration',
     message: '',
+    website: '', // Honeypot field
   });
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // 🛡️ HONEYPOT CHECK: If the 'website' field is filled, it's a bot.
+    if (formData.website) {
+      console.warn('Bot detected via honeypot.');
+      setStatus('submitting');
+      // Simulate a success to trick the bot into thinking it succeeded
+      setTimeout(() => {
+        setStatus('success');
+        setFormData({ name: '', email: '', subject: 'collaboration', message: '', website: '' });
+      }, 1000);
+      return;
+    }
+
     setStatus('submitting');
 
     const serviceId  = import.meta.env.VITE_EMAILJS_SERVICE_ID;
@@ -43,7 +57,7 @@ export default function Contact() {
       setStatus('success');
       setTimeout(() => {
         setStatus('idle');
-        setFormData({ name: '', email: '', subject: 'collaboration', message: '' });
+        setFormData({ name: '', email: '', subject: 'collaboration', message: '', website: '' });
       }, 5000);
     } catch {
       setStatus('error');
@@ -96,6 +110,17 @@ export default function Contact() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
+              {/* 🛡️ HONEYPOT FIELD (Hidden) */}
+              <div className="hidden">
+                <input
+                  type="text"
+                  name="website"
+                  value={formData.website}
+                  onChange={(e) => setFormData((p) => ({ ...p, website: e.target.value }))}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
 
               {/* Name + Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

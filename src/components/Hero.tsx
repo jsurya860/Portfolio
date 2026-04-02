@@ -1,6 +1,6 @@
+import React, { useEffect, useState } from 'react';
 import { Loader, Terminal, Download, ArrowRight } from 'lucide-react';
 import HeroPipeline from './HeroPipeline';
-import { useEffect, useState } from 'react';
 import { fetchHeroContent, HeroContent } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -12,6 +12,35 @@ const defaultHeroContent: HeroContent = {
   cta_text: 'Get in Touch',
   cta_button_text: 'Download CV',
 };
+
+// ─── Magnetic Effect Component ───────────────────────────────────────────────
+function Magnetic({ children }: { children: React.ReactNode }) {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const { clientX, clientY } = e;
+    if (!ref.current) return;
+    const { left, top, width, height } = ref.current.getBoundingClientRect();
+    const x = clientX - (left + width / 2);
+    const y = clientY - (top + height / 2);
+    setPosition({ x: x * 0.35, y: y * 0.35 });
+  };
+
+  const handleMouseLeave = () => setPosition({ x: 0, y: 0 });
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: 'spring', stiffness: 150, damping: 15, mass: 0.1 }}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 const STATUS_LINES = [
   { sym: '▶', text: 'Running test suite...', hex: '#22c55e' },
@@ -151,7 +180,6 @@ export default function Hero() {
           backgroundSize: '32px 32px, 32px 32px, 32px 32px',
         }}
       />
-      {/* Gradient overlay: fades background into solid toward bottom */}
       <div
         className="absolute inset-0 z-[1] pointer-events-none"
         style={{
@@ -159,9 +187,6 @@ export default function Hero() {
         }}
       />
 
-
-
-      {/* ── Accent glows (ambient blobs) ── */}
       <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full blur-3xl pointer-events-none z-[1] opacity-20 dark:opacity-10"
         style={{ background: 'radial-gradient(circle, rgba(34,197,94,0.35), transparent 70%)' }} />
       <div className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full blur-3xl pointer-events-none z-[1] opacity-15 dark:opacity-8"
@@ -177,7 +202,6 @@ export default function Hero() {
             transition={{ duration: 0.7 }}
             className="flex flex-col gap-6"
           >
-            {/* Online badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full w-fit
               border border-[#CFE5D8] bg-[#DCEFE4] text-[#4CAF7A]
               dark:border-[rgba(34,197,94,0.25)] dark:bg-[rgba(34,197,94,0.10)] dark:text-[#22C55E]
@@ -189,7 +213,6 @@ export default function Hero() {
               </span>
             </div>
 
-            {/* Name + cursor */}
             <div>
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none">
                 <span
@@ -209,7 +232,6 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* Status ticker */}
             <div className="flex items-center gap-2.5 font-mono text-sm rounded-xl px-4 py-2.5 w-fit max-w-xs overflow-hidden
               border border-[#E5E7EB] bg-[#F1F5F9]
               dark:border-[rgba(255,255,255,0.08)] dark:bg-[rgba(255,255,255,0.04)]
@@ -231,37 +253,39 @@ export default function Hero() {
               </AnimatePresence>
             </div>
 
-            {/* Description */}
             <p className="text-sm sm:text-base text-[#475569] dark:text-[#9CA3AF] leading-relaxed max-w-md">
               {heroContent.description}
             </p>
 
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-3">
-              <a
-                href="#projects"
-                onClick={(e) => { e.preventDefault(); document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }); }}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm active:scale-95
-                  bg-[#4CAF7A] hover:bg-[#22C55E] text-white
-                  dark:bg-[#22C55E] dark:hover:bg-[#16A34A] dark:text-[#0F172A]
-                  shadow-[0_4px_14px_rgba(76,175,122,0.28)] hover:shadow-[0_6px_20px_rgba(76,175,122,0.44)]
-                  dark:shadow-[0_4px_14px_rgba(34,197,94,0.30)] dark:hover:shadow-[0_6px_20px_rgba(34,197,94,0.50)]
-                  transition-all duration-200"
-              >
-                View My Work
-                <ArrowRight className="w-4 h-4" />
-              </a>
-              <a
-                href="/assets/docs/surya-cv.pdf"
-                download="surya-cv.pdf"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm
-                  border border-[#2563EB]/50 text-[#2563EB] hover:bg-[#EFF6FF] hover:border-[#2563EB] hover:shadow-[0_4px_14px_rgba(37,99,235,0.18)]
-                  dark:border-[#3B82F6]/40 dark:text-[#3B82F6] dark:hover:bg-[rgba(59,130,246,0.08)] dark:hover:border-[#3B82F6] dark:hover:shadow-[0_4px_14px_rgba(59,130,246,0.22)]
-                  transition-all duration-200"
-              >
-                <Download className="w-4 h-4" />
-                Download CV
-              </a>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Magnetic>
+                <a
+                  href="#projects"
+                  onClick={(e) => { e.preventDefault(); document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' }); }}
+                  className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-bold text-sm active:scale-95
+                    bg-[#4CAF7A] hover:bg-[#22C55E] text-white
+                    dark:bg-[#22C55E] dark:hover:bg-[#16A34A] dark:text-[#0F172A]
+                    shadow-[0_4px_14px_rgba(76,175,122,0.28)] hover:shadow-[0_6px_20px_rgba(76,175,122,0.44)]
+                    dark:shadow-[0_4px_14px_rgba(34,197,94,0.30)] dark:hover:shadow-[0_6px_20px_rgba(34,197,94,0.50)]
+                    transition-all duration-300 w-full sm:w-auto"
+                >
+                  View My Work
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+              </Magnetic>
+              <Magnetic>
+                <a
+                  href="/assets/docs/surya-cv.pdf"
+                  download="surya-cv.pdf"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-bold text-sm
+                    border border-[#2563EB]/50 text-[#2563EB] hover:bg-[#EFF6FF] hover:border-[#2563EB] hover:shadow-[0_4px_14px_rgba(37,99,235,0.18)]
+                    dark:border-[#3B82F6]/40 dark:text-[#3B82F6] dark:hover:bg-[rgba(59,130,246,0.08)] dark:hover:border-[#3B82F6] dark:hover:shadow-[0_4px_14px_rgba(59,130,246,0.22)]
+                    transition-all duration-300 w-full sm:w-auto"
+                >
+                  <Download className="w-4 h-4" />
+                  Download Resume
+                </a>
+              </Magnetic>
             </div>
           </motion.div>
 
@@ -272,10 +296,8 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.15 }}
             className="flex flex-col gap-4"
           >
-            {/* CI/CD pipeline */}
             <HeroPipeline />
 
-            {/* Live QA terminal log */}
             <div className="rounded-2xl overflow-hidden
               border border-[#E5E7EB] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.05)]
               dark:border-[rgba(255,255,255,0.08)] dark:bg-[rgba(255,255,255,0.03)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.3)]
@@ -301,7 +323,6 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* Metric counters */}
             <div className="grid grid-cols-3 gap-3">
               {STATS.map((stat, i) => (
                 <motion.div

@@ -1,7 +1,32 @@
-import { Loader, Star, GitFork, ExternalLink, Github } from 'lucide-react';
+import { Star, GitFork, ExternalLink, Github } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { fetchGithubRepos, type GithubRepo, GITHUB_LANG_COLORS } from '../lib/github';
 import { motion } from 'framer-motion';
+
+const ProjectSkeleton = () => (
+  <div className="group glass-card rounded-2xl p-7 animate-pulse border-[var(--border-subtle)]">
+    <div className="flex flex-col h-full">
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-[var(--glow-green)] rounded-xl opacity-20" />
+          <div className="space-y-2">
+            <div className="h-5 w-32 bg-[var(--text-tertiary)] opacity-20 rounded" />
+            <div className="h-3 w-16 bg-[var(--text-tertiary)] opacity-10 rounded" />
+          </div>
+        </div>
+        <div className="w-8 h-8 bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded-lg opacity-20" />
+      </div>
+      <div className="space-y-2 mb-6 flex-grow">
+        <div className="h-4 w-full bg-[var(--text-tertiary)] opacity-10 rounded" />
+        <div className="h-4 w-5/6 bg-[var(--text-tertiary)] opacity-10 rounded" />
+      </div>
+      <div className="flex items-center gap-6 pt-4 border-t border-[var(--border-subtle)]">
+        <div className="h-3 w-12 bg-[var(--text-tertiary)] opacity-20 rounded" />
+        <div className="h-3 w-12 bg-[var(--text-tertiary)] opacity-20 rounded" />
+      </div>
+    </div>
+  </div>
+);
 
 export default function Projects() {
   const [repos, setRepos] = useState<GithubRepo[]>([]);
@@ -40,22 +65,14 @@ export default function Projects() {
           <div className="w-12 h-1 bg-[var(--accent-primary)] mx-auto rounded-full shadow-[0_0_10px_var(--glow-green)]" />
         </motion.div>
 
-        {loading ? (
-          <div className="flex flex-col items-center justify-center py-24 gap-4">
-            <Loader className="w-10 h-10 text-[var(--accent-primary)] animate-spin" />
-            <span className="text-[var(--text-tertiary)] font-mono text-xs animate-pulse">Synchronizing with system...</span>
-          </div>
-        ) : (
-          <motion.div
-            layout
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
-          >
-            {/* Unified Feed - Professional Projects & Lab Activity */}
-            {repos.map((repo) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {loading ? (
+            Array.from({ length: 4 }).map((_, i) => <ProjectSkeleton key={i} />)
+          ) : (
+            repos.map((repo) => (
               <motion.div
                 key={repo.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="group glass-card rounded-2xl p-7 hover:border-[var(--accent-primary)] transition-all duration-500 hover:shadow-[0_12px_40px_var(--glow-green)]"
               >
@@ -105,9 +122,9 @@ export default function Projects() {
                   </div>
                 </div>
               </motion.div>
-            ))}
-          </motion.div>
-        )}
+            ))
+          )}
+        </div>
       </div>
     </section>
   );
