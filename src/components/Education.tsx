@@ -2,6 +2,7 @@ import { GraduationCap, Award, Loader, Building2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { fetchEducation, type Education } from '../lib/supabase';
 import { motion } from 'framer-motion';
+import TimelineLine from './TimelineLine';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   GraduationCap,
@@ -50,7 +51,7 @@ export default function Education() {
   }
 
   return (
-    <section id="education" className="py-24 px-6 relative bg-[var(--bg-primary)] overflow-hidden border-t border-[var(--border-subtle)] transition-colors duration-500">
+    <section id="education" className="py-24 px-6 relative bg-[var(--bg-primary)] overflow-hidden overflow-x-hidden border-t border-[var(--border-subtle)] transition-colors duration-500">
       {/* System Background Decorations - Blue/Indigo focus */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-[var(--accent-secondary)] opacity-[0.03] blur-[100px] pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-[var(--accent-indigo)] opacity-[0.03] blur-[100px] pointer-events-none" />
@@ -70,17 +71,10 @@ export default function Education() {
         </motion.div>
 
         <div className="relative">
-          {/* The System Line - Green tint */}
-          <div className="absolute left-4 md:left-1/2 top-2 bottom-12 w-[1px] bg-[var(--border-color)] md:-translate-x-1/2" />
-          <motion.div 
-            initial={{ height: 0 }}
-            whileInView={{ height: '100%' }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.5, ease: "easeInOut" }}
-            className="absolute left-4 md:left-1/2 top-2 bottom-12 w-[2px] bg-gradient-to-b from-[var(--accent-primary)] via-[var(--accent-secondary)] to-transparent md:-translate-x-1/2 origin-top shadow-[0_0_15px_var(--glow-green)]"
-          />
+          {/* The System Line - Green tint (responsive: left on mobile, centered on md+) */}
+          <TimelineLine translateClass="md:-translate-x-[42%]" />
 
-          <div className="space-y-16">
+          <div className="space-y-10 md:space-y-16">
             {timeline.sort((a, b) => a.display_order - b.display_order).map((item, index) => {
               const IconComponent = iconMap[item.icon_type] || Award;
               const isEven = index % 2 === 0;
@@ -92,32 +86,33 @@ export default function Education() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 0.8, delay: 0.1 }}
-                  className={`relative flex flex-col md:flex-row items-start md:items-center gap-12 ${
+                  className={`flex flex-col md:flex-row items-start md:items-center gap-8 md:gap-12 ${
                     isEven ? 'md:flex-row' : 'md:flex-row-reverse'
-                  }`}
-                >
-                  {/* The Milestone Node - Pulsing Green */}
-                  <div className={`absolute left-4 md:left-1/2 w-3 h-3 rounded-full z-30 md:-translate-x-1/2 ring-4 ring-[var(--bg-primary)] shadow-xl bg-[var(--accent-primary)] glow-pulse-green`} />
+                  }`}>
+                
+                  <div className="absolute left-4 sm:left-6 md:left-1/2 md:-translate-x-[42%] pointer-events-none z-40 flex items-center justify-center">
+                    <div className={`w-3 h-3 rounded-full bg-[var(--accent-primary)] glow-pulse-green`} />
+                  </div>
 
                   {/* Content Card - System Glass Implementation */}
-                  <div className={`w-full md:w-[45%] ml-12 md:ml-0 group`}>
+                    <div className={`w-full md:w-1/2 group min-w-0 max-w-full box-border pl-12 md:pl-0 ${isEven ? 'md:pr-8' : 'md:pl-8'}`}>
                     <div className="relative">
                       <motion.div
                         whileHover={{ scale: 1.02 }}
-                        className="relative p-7 rounded-2xl glass-card hover:border-[var(--accent-primary)] transition-all duration-300 group-hover:shadow-[0_8px_32px_var(--glow-green)]"
+                        className="relative p-5 sm:p-7 rounded-2xl glass-card hover:border-[var(--accent-primary)] transition-all duration-300 group-hover:shadow-[0_8px_32px_var(--glow-green)] max-w-full box-border overflow-hidden"
                       >
                         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-                          <div className="px-3 py-1 bg-[var(--glow-green)] text-[var(--accent-primary)] text-[10px] uppercase tracking-widest font-bold rounded-full border border-[var(--accent-primary)]/20">
+                          <div className="px-3 py-1 bg-[var(--glow-green)] text-[var(--accent-primary)] text-[9px] sm:text-[10px] uppercase tracking-widest font-bold rounded-full border border-[var(--accent-primary)]/20">
                             {item.date}
                           </div>
                           <IconComponent className="w-5 h-5 text-[var(--text-tertiary)] group-hover:text-[var(--accent-primary)] transition-colors" />
                         </div>
 
                         <div className="space-y-1">
-                          <h3 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
+                          <h3 className="text-lg sm:text-xl font-bold text-[var(--text-primary)] tracking-tight break-words">
                             {item.title}
                           </h3>
-                          <p className="text-sm font-medium text-[var(--accent-primary)] mb-4">
+                          <p className="text-sm font-medium text-[var(--accent-primary)] mb-4 break-words">
                             {item.subtitle}
                           </p>
                         </div>

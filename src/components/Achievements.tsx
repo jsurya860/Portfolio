@@ -162,7 +162,7 @@ export default function Achievements() {
                   hidden: { opacity: 0, y: 24 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
                 }}
-                className={`group relative glass-card rounded-2xl p-6 hover:border-[var(--accent-primary)] hover:shadow-[0_8px_32px_var(--glow-green)] transition-all duration-300 hover:-translate-y-1.5`}
+                className={`group relative glass-card rounded-2xl p-6 hover:border-[var(--accent-primary)] hover:shadow-[0_8px_32px_var(--glow-green)] transition-all duration-300 hover:-translate-y-1.5 min-w-0 max-w-full box-border overflow-hidden`}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className={`${colors.text} p-2.5 rounded-xl ${colors.bg} shrink-0`}>
@@ -194,7 +194,7 @@ export default function Achievements() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-10 glass-card rounded-2xl p-6"
+          className="mt-10 glass-card rounded-2xl p-6 min-w-0 max-w-full box-border overflow-hidden"
         >
           <h4 className="text-xs font-semibold text-[#9CA3AF] dark:text-[#6B7280] uppercase tracking-widest mb-6">Impact Summary</h4>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">

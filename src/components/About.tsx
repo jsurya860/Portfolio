@@ -163,14 +163,14 @@ export default function About() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="space-y-5"
           >
-            <div className="glass-card rounded-2xl p-6 hover:border-[var(--accent-primary)] transition-all duration-300 group">
+            <div className="glass-card rounded-2xl p-6 hover:border-[var(--accent-primary)] transition-all duration-300 group min-w-0 max-w-full box-border overflow-hidden">
               <h4 className="text-xs font-semibold text-[#9CA3AF] dark:text-[#6B7280] uppercase tracking-widest mb-3">Summary</h4>
               <p className="text-sm sm:text-base text-[#475569] dark:text-[#D1D5DB] leading-relaxed break-words">
                 {aboutContent.summary}
               </p>
             </div>
 
-            <div className="glass-card rounded-2xl p-6 hover:border-[var(--accent-primary)] transition-all duration-300 group">
+            <div className="glass-card rounded-2xl p-6 hover:border-[var(--accent-primary)] transition-all duration-300 group min-w-0 max-w-full box-border overflow-hidden">
               <h4 className="text-xs font-semibold text-[#9CA3AF] dark:text-[#6B7280] uppercase tracking-widest mb-3">Approach</h4>
               <p className="text-sm sm:text-base text-[#475569] dark:text-[#D1D5DB] leading-relaxed break-words">
                 {aboutContent.approach}
@@ -186,7 +186,7 @@ export default function About() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <div className="glass-card rounded-2xl p-8">
+            <div className="glass-card rounded-2xl p-8 min-w-0 max-w-full box-border overflow-hidden">
               <h3 className="text-lg font-bold mb-6 text-primary">Core Competencies</h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

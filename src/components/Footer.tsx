@@ -114,7 +114,7 @@ export default function Footer() {
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2.5 glass-card rounded-xl hover:border-[var(--accent-primary)] hover:shadow-[0_0_14px_var(--glow-green)] transition-all duration-200 group"
+                  className="p-2.5 glass-card rounded-xl hover:border-[var(--accent-primary)] hover:shadow-[0_0_14px_var(--glow-green)] transition-all duration-200 group min-w-0 max-w-full box-border overflow-hidden"
                   aria-label={link.platform}
                 >
                   <IconComponent className="w-4 h-4 text-[#9CA3AF] group-hover:text-[#4CAF7A] dark:group-hover:text-[#22C55E] transition-colors" />

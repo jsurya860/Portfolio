@@ -4,7 +4,7 @@ import { fetchGithubRepos, type GithubRepo, GITHUB_LANG_COLORS } from '../lib/gi
 import { motion } from 'framer-motion';
 
 const ProjectSkeleton = () => (
-  <div className="group glass-card rounded-2xl p-7 animate-pulse border-[var(--border-subtle)]">
+  <div className="group glass-card rounded-2xl p-7 animate-pulse border-[var(--border-subtle)] min-w-0 max-w-full box-border overflow-hidden">
     <div className="flex flex-col h-full">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
@@ -74,7 +74,7 @@ export default function Projects() {
                 key={repo.id}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="group glass-card rounded-2xl p-7 hover:border-[var(--accent-primary)] transition-all duration-500 hover:shadow-[0_12px_40px_var(--glow-green)]"
+                className="group glass-card rounded-2xl p-7 hover:border-[var(--accent-primary)] transition-all duration-500 hover:shadow-[0_12px_40px_var(--glow-green)] min-w-0 max-w-full box-border overflow-hidden"
               >
                 <div className="flex flex-col h-full">
                   <div className="flex items-start justify-between mb-4">
@@ -99,14 +99,14 @@ export default function Projects() {
                       href={repo.html_url} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="p-2 bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded-lg text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:border-[var(--accent-primary)]/30 transition-all font-bold text-xs flex items-center gap-2"
+                      className="hidden md:flex p-2 bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded-lg text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:border-[var(--accent-primary)]/30 transition-all font-bold text-xs items-center gap-2"
                     >
                       <ExternalLink className="w-4 h-4" />
                       Code
                     </a>
                   </div>
 
-                  <p className="text-sm text-[var(--text-secondary)] mb-6 line-clamp-3 leading-relaxed flex-grow">
+                  <p className="text-sm text-[var(--text-secondary)] mb-6 line-clamp-3 leading-relaxed flex-grow break-words min-w-0">
                     {repo.description || "Building reliable software tools that help ensure applications are fast, secure, and work perfectly for every user."}
                   </p>
 
@@ -118,6 +118,19 @@ export default function Projects() {
                     <div className="flex items-center gap-1.5 text-xs text-[var(--text-tertiary)]">
                       <GitFork className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
                       <span className="font-mono">{repo.forks_count}</span>
+                    </div>
+
+                    {/* Mobile-only Code button aligned to the right inside footer */}
+                    <div className="ml-auto md:hidden">
+                      <a
+                        href={repo.html_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded-lg text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:border-[var(--accent-primary)]/30 transition-all font-bold text-xs flex items-center gap-2"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        Code
+                      </a>
                     </div>
                   </div>
                 </div>

@@ -1,5 +1,6 @@
 import { Building2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import TimelineLine from './TimelineLine';
 
 interface Experience {
     id: string;
@@ -59,7 +60,7 @@ const defaultExperience: Experience[] = [
 
 export default function Experience() {
     return (
-        <section id="experience" className="py-24 px-6 relative bg-[var(--bg-primary)] overflow-hidden transition-colors duration-500">
+        <section id="experience" className="py-24 px-6 relative bg-[var(--bg-primary)] overflow-hidden overflow-x-hidden transition-colors duration-500">
             {/* System Background Decorations */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--accent-primary)] opacity-[0.03] blur-[100px] pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-[var(--accent-secondary)] opacity-[0.03] blur-[100px] pointer-events-none" />
@@ -80,16 +81,9 @@ export default function Experience() {
 
                 <div className="relative">
                     {/* The System Line - Sync with QA Dashboard aesthetics */}
-                    <div className="absolute left-4 md:left-1/2 top-2 bottom-12 w-[1px] bg-[var(--border-color)] md:-translate-x-1/2" />
-                    <motion.div 
-                        initial={{ height: 0 }}
-                        whileInView={{ height: '100%' }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1.5, ease: "easeInOut" }}
-                        className="absolute left-4 md:left-1/2 top-2 bottom-12 w-[2px] bg-gradient-to-b from-[var(--accent-primary)] via-[var(--accent-secondary)] to-transparent md:-translate-x-1/2 origin-top shadow-[0_0_15px_var(--glow-green)]"
-                    />
+                    <TimelineLine translateClass="md:-translate-x-[42%]" />
 
-                    <div className="space-y-16">
+                    <div className="space-y-10 md:space-y-16">
                         {defaultExperience.map((exp, index) => (
                             <motion.div
                                 key={exp.id}
@@ -97,34 +91,34 @@ export default function Experience() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true, margin: "-100px" }}
                                 transition={{ duration: 0.8, delay: 0.1 }}
-                                className={`relative flex flex-col md:flex-row items-start md:items-center gap-12 ${
+                                className={`flex flex-col md:flex-row items-start md:items-center gap-8 md:gap-12 ${
                                     index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
                                 }`}
                             >
-                                {/* The Milestone Node - Pulsing if current */}
-                                <div className={`absolute left-4 md:left-1/2 w-3 h-3 rounded-full z-30 md:-translate-x-1/2 ring-4 ring-[var(--bg-primary)] shadow-xl ${
-                                    exp.isCurrent ? 'bg-[var(--accent-primary)] glow-pulse-green' : 'bg-[var(--text-tertiary)]'
-                                }`} />
+                                {/* The Milestone Node - Ring + inner dot (line sits behind) */}
+                                <div className="absolute left-4 sm:left-6 md:left-1/2 md:-translate-x-[42%] pointer-events-none z-40 flex items-center justify-center">
+                                    <div className={`${exp.isCurrent ? 'w-3 h-3 rounded-full bg-[var(--accent-primary)] glow-pulse-green' : 'w-3 h-3 rounded-full bg-[var(--text-tertiary)]'}`} />
+                                </div>
 
                                 {/* Content Card - System Glass Implementation */}
-                                <div className={`w-full md:w-[45%] ml-12 md:ml-0 group`}>
+                                <div className={`w-full md:w-1/2 group min-w-0 max-w-full box-border pl-12 md:pl-0 ${index % 2 === 0 ? 'md:pr-8' : 'md:pl-8'}`}>
                                     <div className="relative">
                                         <motion.div
                                             whileHover={{ scale: 1.02 }}
-                                            className="relative p-7 rounded-2xl glass-card hover:border-[var(--accent-primary)] transition-all duration-300 group-hover:shadow-[0_8px_32px_var(--glow-green)]"
+                                            className="relative p-5 sm:p-7 rounded-2xl glass-card hover:border-[var(--accent-primary)] transition-all duration-300 group-hover:shadow-[0_8px_32px_var(--glow-green)] max-w-full box-border overflow-hidden"
                                         >
                                             <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-                                                <div className="px-3 py-1 bg-[var(--glow-green)] text-[var(--accent-primary)] text-[10px] uppercase tracking-widest font-bold rounded-full border border-[var(--accent-primary)]/20">
+                                                <div className="px-3 py-1 bg-[var(--glow-green)] text-[var(--accent-primary)] text-[9px] sm:text-[10px] uppercase tracking-widest font-bold rounded-full border border-[var(--accent-primary)]/20">
                                                     {exp.duration}
                                                 </div>
                                                 <Building2 className="w-5 h-5 text-[var(--text-tertiary)] group-hover:text-[var(--accent-primary)] transition-colors" />
                                             </div>
 
                                             <div className="space-y-1">
-                                                <h3 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">
+                                                <h3 className="text-lg sm:text-xl font-bold text-[var(--text-primary)] tracking-tight break-words">
                                                     {exp.role}
                                                 </h3>
-                                                <p className="text-sm font-medium text-[var(--accent-primary)] mb-6">
+                                                <p className="text-sm font-medium text-[var(--accent-primary)] mb-6 break-words">
                                                     {exp.company}
                                                 </p>
                                             </div>
@@ -139,7 +133,7 @@ export default function Experience() {
                                                         className="flex gap-4 group/item"
                                                     >
                                                         <div className="mt-2 w-1 h-1 rounded-full bg-[var(--border-color)] group-hover/item:bg-[var(--accent-primary)] transition-colors" />
-                                                        <p className="text-sm text-[var(--text-secondary)] leading-relaxed font-normal">
+                                                        <p className="text-sm text-[var(--text-secondary)] leading-relaxed font-normal break-words">
                                                             {point}
                                                         </p>
                                                     </motion.li>

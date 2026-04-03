@@ -100,7 +100,7 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="glass-card rounded-2xl p-6 sm:p-8"
+          className="glass-card rounded-2xl p-6 sm:p-8 min-w-0 max-w-full box-border overflow-hidden"
         >
           {status === 'success' ? (
             <div className="bg-[#EEFAF3] dark:bg-[rgba(34,197,94,0.08)] border border-[#CFE5D8] dark:border-[rgba(34,197,94,0.25)] rounded-2xl p-10 text-center">
