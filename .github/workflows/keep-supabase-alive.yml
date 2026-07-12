@@ -1,0 +1,28 @@
+name: Keep Supabase Active
+
+# Supabase free-tier projects auto-pause after 7 days with no API activity.
+# This pings a public, read-only endpoint every 3 days so the project never
+# goes long enough without a request to trigger that pause.
+
+on:
+  schedule:
+    - cron: '0 6 */3 * *' # every 3 days at 06:00 UTC
+  workflow_dispatch: {} # allows manual "Run workflow" from the Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API
+        env:
+          SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "::error::VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY repo secrets are not set."
+            exit 1
+          fi
+          curl -sf "$SUPABASE_URL/rest/v1/portfolio_settings?select=id&limit=1" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            -o /dev/null -w "Supabase ping status: %{http_code}\n"
