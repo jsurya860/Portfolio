@@ -96,7 +96,7 @@ export default function Experience() {
                                 }`}
                             >
                                 {/* The Milestone Node - Ring + inner dot (line sits behind) */}
-                                <div className="absolute top-7 left-4 sm:left-6 md:left-1/2 md:-translate-x-[42%] pointer-events-none z-40 flex items-center justify-center">
+                                <div className="absolute top-7 left-4 sm:left-6 md:left-1/2 -translate-x-1/2 md:-translate-x-[42%] pointer-events-none z-40 flex items-center justify-center">
                                     <div className={`${exp.isCurrent ? 'w-3 h-3 rounded-full bg-[var(--accent-primary)] glow-pulse-green' : 'w-3 h-3 rounded-full bg-[var(--text-tertiary)]'}`} />
                                 </div>
 
