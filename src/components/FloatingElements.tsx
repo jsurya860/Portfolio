@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
 import { Bug } from 'lucide-react';
 import { useMemo } from 'react';
+import { usePrefersReducedMotion } from '../lib/usePrefersReducedMotion';
 
 const ICONS = [Bug];
 
@@ -49,6 +50,7 @@ function FloatingIcon({ el, scrollYProgress }: FloatingIconProps) {
 
 export default function FloatingElements() {
     const { scrollYProgress } = useScroll();
+    const reduceMotion = usePrefersReducedMotion();
 
     const elements = useMemo(() => {
         return Array.from({ length: 15 }).map((_, i) => ({
@@ -62,6 +64,8 @@ export default function FloatingElements() {
             opacity: Math.random() * 0.05 + 0.02
         }));
     }, []);
+
+    if (reduceMotion) return null;
 
     return (
         <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none">

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Loader, Terminal, Download, ArrowRight } from 'lucide-react';
+import { Terminal, Download, ArrowRight } from 'lucide-react';
 import HeroPipeline from './HeroPipeline';
 import { fetchHeroContent, HeroContent } from '../lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -138,12 +138,11 @@ function CountUp({ to, suffix }: { to: number; suffix: string }) {
 // ─── Hero ──────────────────────────────────────────────────────────────────────
 export default function Hero() {
   const [heroContent, setHeroContent] = useState<HeroContent>(defaultHeroContent);
-  const [loading, setLoading] = useState(true);
   const [statusIdx, setStatusIdx] = useState(0);
   const [cursor, setCursor] = useState(true);
 
   useEffect(() => {
-    fetchHeroContent().then(data => { if (data) setHeroContent(data); setLoading(false); });
+    fetchHeroContent().then(data => { if (data) setHeroContent(data); });
   }, []);
 
   useEffect(() => {
@@ -157,14 +156,6 @@ export default function Hero() {
   }, []);
 
   const status = STATUS_LINES[statusIdx];
-
-  if (loading) {
-    return (
-      <section className="relative min-h-screen flex items-center justify-center bg-[#F8FAFC] dark:bg-[#0F172A]">
-        <Loader className="w-10 h-10 text-[#22c55e] animate-spin" />
-      </section>
-    );
-  }
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-[#F8FAFC] dark:bg-[#0F172A] px-4 sm:px-6">

@@ -46,7 +46,7 @@ export default function Certifications() {
         </motion.div>
 
         <div className="grid sm:grid-cols-2 gap-6">
-          {certs.map((cert, idx) => (
+          {certs.map((cert) => (
             <motion.a
               key={cert.id}
               href={cert.url && cert.url.length > 0 ? cert.url : undefined}

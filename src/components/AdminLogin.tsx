@@ -14,7 +14,6 @@ export default function AdminLogin({ onLoginSuccess, onBack }: AdminLoginProps) 
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [isSignUp, setIsSignUp] = useState(false);
   const [isReset, setIsReset] = useState(false);
   const [resetMessage, setResetMessage] = useState('');
 
@@ -47,26 +46,14 @@ export default function AdminLogin({ onLoginSuccess, onBack }: AdminLoginProps) 
     setLoading(true);
 
     try {
-      if (isSignUp) {
-        const { error: signUpError } = await supabase.auth.signUp({
-          email,
-          password,
-        });
-        if (signUpError) {
-          setError(signUpError.message);
-        } else {
-          setError('Check your email to confirm your account');
-        }
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (signInError) {
+        setError(signInError.message);
       } else {
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (signInError) {
-          setError(signInError.message);
-        } else {
-          onLoginSuccess();
-        }
+        onLoginSuccess();
       }
     } catch {
       setError('An unexpected error occurred');
@@ -109,7 +96,7 @@ export default function AdminLogin({ onLoginSuccess, onBack }: AdminLoginProps) 
           <p className="text-center text-[#475569] dark:text-[#9CA3AF] mb-8">
             {isReset
               ? 'Enter your email to receive a reset link'
-              : (isSignUp ? 'Create your admin account' : 'Sign in to manage content')
+              : 'Sign in to manage content'
             }
           </p>
 
@@ -152,21 +139,19 @@ export default function AdminLogin({ onLoginSuccess, onBack }: AdminLoginProps) 
                     placeholder="*******"
                   />
                 </div>
-                {!isSignUp && (
-                  <div className="flex justify-end mt-1">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsReset(true);
-                        setError('');
-                        setResetMessage('');
-                      }}
-                      className="text-xs text-green-400 hover:text-green-300 transition-colors"
-                    >
-                      Forgot password?
-                    </button>
-                  </div>
-                )}
+                <div className="flex justify-end mt-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsReset(true);
+                      setError('');
+                      setResetMessage('');
+                    }}
+                    className="text-xs text-green-400 hover:text-green-300 transition-colors"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
               </div>
             )}
 
@@ -178,16 +163,16 @@ export default function AdminLogin({ onLoginSuccess, onBack }: AdminLoginProps) 
               {loading ? (
                 <>
                   <Loader className="w-5 h-5 animate-spin" />
-                  {isReset ? 'Sending Link...' : (isSignUp ? 'Creating account...' : 'Signing in...')}
+                  {isReset ? 'Sending Link...' : 'Signing in...'}
                 </>
               ) : (
-                isReset ? 'Send Reset Link' : (isSignUp ? 'Create Account' : 'Sign In')
+                isReset ? 'Send Reset Link' : 'Sign In'
               )}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            {isReset ? (
+          {isReset && (
+            <div className="mt-6 text-center">
               <button
                 type="button"
                 onClick={() => {
@@ -199,27 +184,13 @@ export default function AdminLogin({ onLoginSuccess, onBack }: AdminLoginProps) 
               >
                 Back to Login
               </button>
-            ) : (
-              <p className="text-[#475569] dark:text-[#9CA3AF] text-sm">
-                {isSignUp ? 'Already have an account?' : "Don't have an account?"}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsSignUp(!isSignUp);
-                    setError('');
-                  }}
-                  className="ml-1 text-green-400 hover:text-green-300 font-semibold"
-                >
-                  {isSignUp ? 'Sign in' : 'Create one'}
-                </button>
-              </p>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         <div className="mt-8 text-center text-[#374151] dark:text-[#6B7280] text-sm">
           <p>This area is for authorized users only.</p>
-          <p>Only registered admin users can access this panel.</p>
+          <p>Account creation is not available from this panel.</p>
         </div>
       </div>
     </div>

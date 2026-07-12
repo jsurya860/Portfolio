@@ -322,7 +322,7 @@ async function upsertItem<T>(table: string, content: Partial<T> & { id?: string 
     }
     return data;
   } else {
-    const { id, ...insertData } = content;
+    const { id: _id, ...insertData } = content;
     const { data, error } = await supabase
       .from(table)
       .insert([insertData])
@@ -377,7 +377,7 @@ export async function replaceSkills(skills: Partial<Skill>[]): Promise<boolean> 
   if (skills.length === 0) return true;
 
   // 2. Insert new skills (strip temp IDs)
-  const toInsert = skills.map(({ id, ...rest }) => rest);
+  const toInsert = skills.map(({ id: _id, ...rest }) => rest);
   const { error } = await supabase.from('portfolio_skills').insert(toInsert);
 
   if (error) {
@@ -395,7 +395,7 @@ export async function replaceTechStack(stack: Partial<TechStack>[]): Promise<boo
   if (stack.length === 0) return true;
 
   // 2. Insert new stack (strip temp IDs)
-  const toInsert = stack.map(({ id, ...rest }) => rest);
+  const toInsert = stack.map(({ id: _id, ...rest }) => rest);
   const { error } = await supabase.from('portfolio_tech_stack').insert(toInsert);
 
   if (error) {

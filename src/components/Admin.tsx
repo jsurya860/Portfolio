@@ -16,6 +16,73 @@ import {
 
 type Tab = 'hero' | 'about' | 'achievements' | 'projects' | 'education' | 'social' | 'settings';
 
+type ShowMessage = (type: 'success' | 'error', text: string) => void;
+
+interface AdminData {
+  heroContent: HeroContent | null;
+  aboutContent: AboutContent | null;
+  projects: QAProject[];
+  achievements: Achievement[];
+  education: Education[];
+  skills: Skill[];
+  techStack: TechStack[];
+  socialLinks: SocialLink[];
+  settings: PortfolioSettings | null;
+}
+
+interface AdminSetters {
+  setHeroContent: React.Dispatch<React.SetStateAction<HeroContent | null>>;
+  setAboutContent: React.Dispatch<React.SetStateAction<AboutContent | null>>;
+  setProjects: React.Dispatch<React.SetStateAction<QAProject[]>>;
+  setAchievements: React.Dispatch<React.SetStateAction<Achievement[]>>;
+  setEducation: React.Dispatch<React.SetStateAction<Education[]>>;
+  setSkills: React.Dispatch<React.SetStateAction<Skill[]>>;
+  setTechStack: React.Dispatch<React.SetStateAction<TechStack[]>>;
+  setSocialLinks: React.Dispatch<React.SetStateAction<SocialLink[]>>;
+  setSettings: React.Dispatch<React.SetStateAction<PortfolioSettings | null>>;
+}
+
+const fieldLabelClass = 'text-xs text-[#374151] dark:text-[#6B7280] uppercase font-mono';
+const fieldInputClass = 'w-full bg-primary border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] p-4 rounded-lg focus:border-green-500 outline-none';
+
+function LabeledInput({ label, type = 'text', value, onChange }: {
+  label: string;
+  type?: string;
+  value: string | number;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div className="space-y-2">
+      <label className={fieldLabelClass}>{label}</label>
+      <input
+        type={type}
+        className={fieldInputClass}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+      />
+    </div>
+  );
+}
+
+function LabeledTextarea({ label, value, onChange, minHeight = '100px' }: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  minHeight?: string;
+}) {
+  return (
+    <div className="space-y-3">
+      <label className={fieldLabelClass}>{label}</label>
+      <textarea
+        className={fieldInputClass}
+        style={{ minHeight }}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+      />
+    </div>
+  );
+}
+
 export default function Admin() {
   const { isDark, toggle } = useTheme();
   const [activeTab, setActiveTab] = useState<Tab>('hero');
@@ -86,7 +153,7 @@ export default function Admin() {
     window.location.href = '/';
   };
 
-  const SidebarItem = ({ id, label, icon: Icon }: { id: Tab, label: string, icon: any }) => (
+  const SidebarItem = ({ id, label, icon: Icon }: { id: Tab, label: string, icon: React.ComponentType<{ className?: string }> }) => (
     <button
       onClick={() => {
         setActiveTab(id);
@@ -251,8 +318,16 @@ export default function Admin() {
 
 // --- Sub-components ---
 
-function SectionEditor({ activeTab, data, setData, showMessage, setSaving, refresh }: any) {
-  const handleSave = async (fn: any, payload: any, stateSetter?: any) => {
+function SectionEditor({ activeTab, data, setData, showMessage, setSaving, refresh }: {
+  activeTab: Tab;
+  data: AdminData;
+  setData: AdminSetters;
+  showMessage: ShowMessage;
+  setSaving: (saving: boolean) => void;
+  refresh: () => void;
+}) {
+  const handleSave = async <T,>(fn: (payload: Partial<T>) => Promise<T | null>, payload: Partial<T> | null, stateSetter?: (value: T) => void) => {
+    if (!payload) return;
     setSaving(true);
     const result = await fn(payload);
     setSaving(false);
@@ -264,7 +339,7 @@ function SectionEditor({ activeTab, data, setData, showMessage, setSaving, refre
     }
   };
 
-  const handleReset = async (fn: any, label: string) => {
+  const handleReset = async (fn: () => Promise<boolean>, label: string) => {
     if (confirm(`Are you sure you want to reset all ${label} data to defaults? This will permanently delete your custom entries.`)) {
       setSaving(true);
       const success = await fn();
@@ -282,47 +357,33 @@ function SectionEditor({ activeTab, data, setData, showMessage, setSaving, refre
     case 'hero':
       return (
         <div className="bg-secondary rounded-xl p-6 md:p-8 border border-card space-y-6 shadow-xl hover:border-gray-600/50 transition-all duration-300">
-          <div className="space-y-3">
-            <label className="text-xs text-[#374151] dark:text-[#6B7280] uppercase font-mono">Headline</label>
-            <input
-              className="w-full bg-primary border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] p-4 rounded-lg focus:border-green-500 outline-none"
-              value={data.heroContent?.headline || ''}
-              onChange={e => setData.setHeroContent({ ...data.heroContent, headline: e.target.value })}
-            />
-          </div>
-          <div className="space-y-3">
-            <label className="text-xs text-[#374151] dark:text-[#6B7280] uppercase font-mono">Subheadline</label>
-            <input
-              className="w-full bg-primary border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] p-4 rounded-lg focus:border-green-500 outline-none"
-              value={data.heroContent?.subheadline || ''}
-              onChange={e => setData.setHeroContent({ ...data.heroContent, subheadline: e.target.value })}
-            />
-          </div>
-          <div className="space-y-3">
-            <label className="text-xs text-[#374151] dark:text-[#6B7280] uppercase font-mono">Main Description</label>
-            <textarea
-              className="w-full bg-primary border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] p-4 rounded-lg focus:border-green-500 outline-none min-h-[120px]"
-              value={data.heroContent?.description || ''}
-              onChange={e => setData.setHeroContent({ ...data.heroContent, description: e.target.value })}
-            />
-          </div>
+          <LabeledInput
+            label="Headline"
+            value={data.heroContent?.headline || ''}
+            onChange={v => setData.setHeroContent(data.heroContent ? { ...data.heroContent, headline: v } : null)}
+          />
+          <LabeledInput
+            label="Subheadline"
+            value={data.heroContent?.subheadline || ''}
+            onChange={v => setData.setHeroContent(data.heroContent ? { ...data.heroContent, subheadline: v } : null)}
+          />
+          <LabeledTextarea
+            label="Main Description"
+            minHeight="120px"
+            value={data.heroContent?.description || ''}
+            onChange={v => setData.setHeroContent(data.heroContent ? { ...data.heroContent, description: v } : null)}
+          />
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-xs text-[#374151] dark:text-[#6B7280] uppercase font-mono">CTA Text</label>
-              <input
-                className="w-full bg-primary border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] p-4 rounded-lg focus:border-green-500 outline-none"
-                value={data.heroContent?.cta_text || ''}
-                onChange={e => setData.setHeroContent({ ...data.heroContent, cta_text: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs text-[#374151] dark:text-[#6B7280] uppercase font-mono">Button Text</label>
-              <input
-                className="w-full bg-primary border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] p-4 rounded-lg focus:border-green-500 outline-none"
-                value={data.heroContent?.cta_button_text || ''}
-                onChange={e => setData.setHeroContent({ ...data.heroContent, cta_button_text: e.target.value })}
-              />
-            </div>
+            <LabeledInput
+              label="CTA Text"
+              value={data.heroContent?.cta_text || ''}
+              onChange={v => setData.setHeroContent(data.heroContent ? { ...data.heroContent, cta_text: v } : null)}
+            />
+            <LabeledInput
+              label="Button Text"
+              value={data.heroContent?.cta_button_text || ''}
+              onChange={v => setData.setHeroContent(data.heroContent ? { ...data.heroContent, cta_button_text: v } : null)}
+            />
           </div>
           <div className="flex gap-4 pt-4">
             <button
@@ -344,69 +405,51 @@ function SectionEditor({ activeTab, data, setData, showMessage, setSaving, refre
     case 'about':
       return (
         <div className="bg-secondary rounded-xl p-6 md:p-8 border border-card space-y-6 shadow-xl hover:border-gray-600/50 transition-all duration-300">
-          <div className="space-y-3">
-            <label className="text-xs text-[#374151] dark:text-[#6B7280] uppercase font-mono">Profile Summary</label>
-            <textarea
-              className="w-full bg-primary border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] p-4 rounded-lg focus:border-green-500 outline-none min-h-[100px]"
-              value={data.aboutContent?.summary || ''}
-              onChange={e => setData.setAboutContent({ ...data.aboutContent, summary: e.target.value })}
+          <LabeledTextarea
+            label="Profile Summary"
+            value={data.aboutContent?.summary || ''}
+            onChange={v => setData.setAboutContent(data.aboutContent ? { ...data.aboutContent, summary: v } : null)}
+          />
+          <LabeledTextarea
+            label="Testing Approach"
+            value={data.aboutContent?.approach || ''}
+            onChange={v => setData.setAboutContent(data.aboutContent ? { ...data.aboutContent, approach: v } : null)}
+          />
+          <div className="grid grid-cols-2 gap-4">
+            <LabeledInput
+              label="Exp Years" type="number"
+              value={data.aboutContent?.experience_years || 0}
+              onChange={v => setData.setAboutContent(data.aboutContent ? { ...data.aboutContent, experience_years: parseInt(v) || 0 } : null)}
+            />
+            <LabeledInput
+              label="Success Rate (%)" type="number"
+              value={data.aboutContent?.success_rate || 0}
+              onChange={v => setData.setAboutContent(data.aboutContent ? { ...data.aboutContent, success_rate: parseFloat(v) || 0 } : null)}
             />
           </div>
-          <div className="space-y-2">
-            <label className="text-xs text-[#374151] dark:text-[#6B7280] uppercase font-mono">Testing Approach</label>
-            <textarea
-              className="w-full bg-primary border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] p-4 rounded-lg focus:border-green-500 outline-none min-h-[100px]"
-              value={data.aboutContent?.approach || ''}
-              onChange={e => setData.setAboutContent({ ...data.aboutContent, approach: e.target.value })}
+          <div className="grid grid-cols-2 gap-4">
+            <LabeledInput
+              label="Tests Written" type="number"
+              value={data.aboutContent?.tests_written || 0}
+              onChange={v => setData.setAboutContent(data.aboutContent ? { ...data.aboutContent, tests_written: parseInt(v) || 0 } : null)}
+            />
+            <LabeledInput
+              label="Bugs Found" type="number"
+              value={data.aboutContent?.bugs_found || 0}
+              onChange={v => setData.setAboutContent(data.aboutContent ? { ...data.aboutContent, bugs_found: parseInt(v) || 0 } : null)}
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-xs text-[#374151] dark:text-[#6B7280] uppercase font-mono">Exp Years</label>
-              <input type="number" className="w-full bg-primary border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] p-4 rounded-lg focus:border-green-500 outline-none"
-                value={data.aboutContent?.experience_years || 0}
-                onChange={e => setData.setAboutContent({ ...data.aboutContent, experience_years: parseInt(e.target.value) })}
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs text-[#374151] dark:text-[#6B7280] uppercase font-mono">Success Rate (%)</label>
-              <input type="number" className="w-full bg-primary border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] p-4 rounded-lg focus:border-green-500 outline-none"
-                value={data.aboutContent?.success_rate || 0}
-                onChange={e => setData.setAboutContent({ ...data.aboutContent, success_rate: parseFloat(e.target.value) })}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-xs text-[#374151] dark:text-[#6B7280] uppercase font-mono">Tests Written</label>
-              <input type="number" className="w-full bg-primary border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] p-4 rounded-lg focus:border-green-500 outline-none"
-                value={data.aboutContent?.tests_written || 0}
-                onChange={e => setData.setAboutContent({ ...data.aboutContent, tests_written: parseInt(e.target.value) })}
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs text-[#374151] dark:text-[#6B7280] uppercase font-mono">Bugs Found</label>
-              <input type="number" className="w-full bg-primary border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] p-4 rounded-lg focus:border-green-500 outline-none"
-                value={data.aboutContent?.bugs_found || 0}
-                onChange={e => setData.setAboutContent({ ...data.aboutContent, bugs_found: parseInt(e.target.value) })}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-xs text-[#374151] dark:text-[#6B7280] uppercase font-mono">Test Coverage (%)</label>
-              <input type="number" className="w-full bg-primary border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] p-4 rounded-lg focus:border-green-500 outline-none"
-                value={data.aboutContent?.test_coverage || 0}
-                onChange={e => setData.setAboutContent({ ...data.aboutContent, test_coverage: parseFloat(e.target.value) })}
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs text-[#374151] dark:text-[#6B7280] uppercase font-mono">Projects Delivered</label>
-              <input type="number" className="w-full bg-primary border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] p-4 rounded-lg focus:border-green-500 outline-none"
-                value={data.aboutContent?.projects_delivered || 0}
-                onChange={e => setData.setAboutContent({ ...data.aboutContent, projects_delivered: parseInt(e.target.value) })}
-              />
-            </div>
+            <LabeledInput
+              label="Test Coverage (%)" type="number"
+              value={data.aboutContent?.test_coverage || 0}
+              onChange={v => setData.setAboutContent(data.aboutContent ? { ...data.aboutContent, test_coverage: parseFloat(v) || 0 } : null)}
+            />
+            <LabeledInput
+              label="Projects Delivered" type="number"
+              value={data.aboutContent?.projects_delivered || 0}
+              onChange={v => setData.setAboutContent(data.aboutContent ? { ...data.aboutContent, projects_delivered: parseInt(v) || 0 } : null)}
+            />
           </div>
           <div className="pt-8 border-t border-card space-y-8">
             <div className="space-y-4">
@@ -446,8 +489,7 @@ function SectionEditor({ activeTab, data, setData, showMessage, setSaving, refre
                 onUpsert={upsertTechStack}
                 onDelete={deleteTechStack}
                 refresh={() => fetchTechStack().then(setData.setTechStack)}
-                fields={['name', 'icon_type', 'display_order']}
-                defaults={{ icon_type: 'Code2', display_order: 1 }}
+                fields={['name']}
                 label="Tech Stack Item"
                 showMessage={showMessage}
                 setSaving={setSaving}
@@ -563,39 +605,27 @@ function SectionEditor({ activeTab, data, setData, showMessage, setSaving, refre
       return (
         <div className="bg-secondary rounded-xl p-8 border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] space-y-6">
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-xs text-[#374151] dark:text-[#6B7280] uppercase font-mono">Site Title (Primary)</label>
-              <input
-                className="w-full bg-primary border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] p-4 rounded-lg focus:border-green-500 outline-none"
-                value={data.settings?.site_title || ''}
-                onChange={e => setData.setSettings({ ...data.settings, site_title: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs text-[#374151] dark:text-[#6B7280] uppercase font-mono">Site Title (Alternate)</label>
-              <input
-                className="w-full bg-primary border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] p-4 rounded-lg focus:border-green-500 outline-none"
-                value={data.settings?.site_title_alternate || ''}
-                onChange={e => setData.setSettings({ ...data.settings, site_title_alternate: e.target.value })}
-              />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <label className="text-xs text-[#374151] dark:text-[#6B7280] uppercase font-mono">Site Description</label>
-            <input
-              className="w-full bg-primary border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] p-4 rounded-lg focus:border-green-500 outline-none"
-              value={data.settings?.site_description || ''}
-              onChange={e => setData.setSettings({ ...data.settings, site_description: e.target.value })}
+            <LabeledInput
+              label="Site Title (Primary)"
+              value={data.settings?.site_title || ''}
+              onChange={v => setData.setSettings(data.settings ? { ...data.settings, site_title: v } : null)}
+            />
+            <LabeledInput
+              label="Site Title (Alternate)"
+              value={data.settings?.site_title_alternate || ''}
+              onChange={v => setData.setSettings(data.settings ? { ...data.settings, site_title_alternate: v } : null)}
             />
           </div>
-          <div className="space-y-2">
-            <label className="text-xs text-[#374151] dark:text-[#6B7280] uppercase font-mono">Public Email</label>
-            <input
-              className="w-full bg-primary border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.1)] p-4 rounded-lg focus:border-green-500 outline-none"
-              value={data.settings?.email || ''}
-              onChange={e => setData.setSettings({ ...data.settings, email: e.target.value })}
-            />
-          </div>
+          <LabeledInput
+            label="Site Description"
+            value={data.settings?.site_description || ''}
+            onChange={v => setData.setSettings(data.settings ? { ...data.settings, site_description: v } : null)}
+          />
+          <LabeledInput
+            label="Public Email"
+            value={data.settings?.email || ''}
+            onChange={v => setData.setSettings(data.settings ? { ...data.settings, email: v } : null)}
+          />
           <div className="flex gap-4">
             <button
               onClick={() => handleSave(updatePortfolioSettings, data.settings)}
@@ -618,24 +648,34 @@ function SectionEditor({ activeTab, data, setData, showMessage, setSaving, refre
   }
 }
 
-function CRUDList({ items, onUpsert, onDelete, refresh, fields, label, showMessage, setSaving, defaults = {} }: any) {
+function CRUDList<T extends { id: string }>({ items, onUpsert, onDelete, refresh, fields, label, showMessage, setSaving, defaults = {} }: {
+  items: T[];
+  onUpsert: (item: Partial<T>) => Promise<T | null>;
+  onDelete: (id: string) => Promise<boolean>;
+  refresh: () => void;
+  fields: string[];
+  label: string;
+  showMessage: ShowMessage;
+  setSaving: (saving: boolean) => void;
+  defaults?: Partial<T>;
+}) {
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState<any>({});
+  const [formData, setFormData] = useState<Record<string, string | number>>({});
 
-  const handleEdit = (item: any) => {
+  const handleEdit = (item: T) => {
     setEditingId(item.id);
-    setFormData(item);
+    setFormData(item as unknown as Record<string, string | number>);
   };
 
   const handleCreate = () => {
     setEditingId('new');
-    setFormData({ ...defaults });
+    setFormData({ ...defaults } as unknown as Record<string, string | number>);
   };
 
   const handleSubmit = async () => {
     if (setSaving) setSaving(true);
     try {
-      const res = await onUpsert(formData);
+      const res = await onUpsert(formData as Partial<T>);
       if (res) {
         setEditingId(null);
         refresh();
@@ -643,7 +683,7 @@ function CRUDList({ items, onUpsert, onDelete, refresh, fields, label, showMessa
       } else {
         if (showMessage) showMessage('error', `Critical failure: Could not save ${label.toLowerCase()}.`);
       }
-    } catch (error) {
+    } catch {
       if (showMessage) showMessage('error', `Network error while saving ${label.toLowerCase()}.`);
     } finally {
       if (setSaving) setSaving(false);
@@ -661,7 +701,7 @@ function CRUDList({ items, onUpsert, onDelete, refresh, fields, label, showMessa
         } else {
           if (showMessage) showMessage('error', `Failed to delete ${label.toLowerCase()}.`);
         }
-      } catch (error) {
+      } catch {
         if (showMessage) showMessage('error', `Network error while deleting ${label.toLowerCase()}.`);
       } finally {
         if (setSaving) setSaving(false);
@@ -679,14 +719,18 @@ function CRUDList({ items, onUpsert, onDelete, refresh, fields, label, showMessa
       </div>
 
       <div className="space-y-3">
-        {items.map((item: any) => (
+        {items.map((item) => {
+          const row = item as unknown as Record<string, unknown>;
+          const primary = String(row[fields[1]] ?? row[fields[0]] ?? '');
+          const secondary = String(row[fields[0]] ?? '');
+          return (
           <div key={item.id} className="bg-primary border border-card p-4 rounded-xl flex items-center justify-between group hover:border-green-500/30 transition-all overflow-hidden">
             <div className="flex-grow min-w-0">
-              <div className="font-bold text-primary truncate pr-4" title={item[fields[1]] || item[fields[0]]}>
-                {item[fields[1]] || item[fields[0]]}
+              <div className="font-bold text-primary truncate pr-4" title={primary}>
+                {primary}
               </div>
               <div className="text-xs text-[#374151] dark:text-[#6B7280] font-mono mt-1 opacity-60 truncate">
-                {item[fields[0]] !== (item[fields[1]] || item[fields[0]]) ? item[fields[0]] : item.id.slice(0, 8)}
+                {secondary !== primary ? secondary : item.id.slice(0, 8)}
               </div>
             </div>
             <div className="flex gap-2 flex-shrink-0">
@@ -698,7 +742,8 @@ function CRUDList({ items, onUpsert, onDelete, refresh, fields, label, showMessa
               </button>
             </div>
           </div>
-        ))}
+          );
+        })}
 
         {items.length === 0 && (
           <div className="text-center py-8 text-[#374151] dark:text-[#6B7280] italic text-sm border-2 border-dashed border-card rounded-xl">
@@ -799,7 +844,7 @@ const previewStatusColors: Record<string, string> = {
   MEDIUM:      'text-blue-400 border-blue-400/30 bg-blue-500/10',
 };
 
-function SectionPreview({ activeTab, data }: any) {
+function SectionPreview({ activeTab, data }: { activeTab: Tab; data: AdminData }) {
   switch (activeTab) {
     case 'hero':
       return (
@@ -874,7 +919,7 @@ function SectionPreview({ activeTab, data }: any) {
           <div className="bg-card border border-card rounded-2xl p-5">
             <h3 className="text-sm font-bold mb-4 text-primary">Core Competencies</h3>
             <div className="grid grid-cols-2 gap-2">
-              {data.skills.map((skill: any) => (
+              {data.skills.map((skill: Skill) => (
                 <div key={skill.id} className="flex items-center gap-2.5 p-3 rounded-xl bg-[#F8FAFC] dark:bg-[rgba(255,255,255,0.03)] border border-card">
                   <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${previewColorMap[skill.color]?.text || 'text-emerald-400'}`} style={{ backgroundColor: 'currentColor' }} />
                   <span className="text-xs font-medium text-[#0F172A] dark:text-[#D1D5DB] truncate">{skill.name}</span>
@@ -885,7 +930,7 @@ function SectionPreview({ activeTab, data }: any) {
             <div className="mt-5 pt-4 border-t border-card">
               <h4 className="text-xs font-semibold text-[#9CA3AF] dark:text-[#6B7280] uppercase tracking-widest mb-3">Tech Stack</h4>
               <div className="flex flex-wrap gap-1.5">
-                {data.techStack.map((tech: any) => (
+                {data.techStack.map((tech: TechStack) => (
                   <span key={tech.id} className="px-2.5 py-1 bg-[#F8FAFC] dark:bg-[rgba(255,255,255,0.05)] border border-card rounded-lg text-xs text-[#0F172A] dark:text-[#D1D5DB]">{tech.name}</span>
                 ))}
               </div>
@@ -901,7 +946,7 @@ function SectionPreview({ activeTab, data }: any) {
             Key <span className="text-accent-primary">Achievements</span>
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {data.achievements.map((a: any) => {
+            {data.achievements.map((a: Achievement) => {
               const c = previewColorMap[a.color] || previewColorMap.blue;
               return (
                 <div key={a.id} className={`group bg-card border border-card rounded-2xl p-5 hover:border-[#CBD5E1] dark:hover:border-[rgba(255,255,255,0.12)] transition-all`}>
@@ -938,7 +983,7 @@ function SectionPreview({ activeTab, data }: any) {
             Project <span className="text-accent-primary">Portfolio</span>
           </h2>
           <div className="space-y-4">
-            {data.projects.map((p: any) => {
+            {data.projects.map((p: QAProject) => {
               const c = previewColorMap[p.color] || previewColorMap.blue;
               const priorityStyle = previewStatusColors[p.priority] || previewStatusColors.MEDIUM;
               const statusStyle = previewStatusColors[p.status] || previewStatusColors.PASSED;
@@ -982,7 +1027,7 @@ function SectionPreview({ activeTab, data }: any) {
           <div className="relative">
             <div className="absolute left-3 top-0 bottom-0 w-px bg-[rgba(255,255,255,0.1)] dark:bg-[rgba(255,255,255,0.06)]" />
             <div className="space-y-6">
-              {data.education.map((edu: any) => {
+              {data.education.map((edu: Education) => {
                 const c = previewColorMap[edu.color] || previewColorMap.blue;
                 return (
                   <div key={edu.id} className="relative flex items-start gap-5 pl-8">
@@ -1014,7 +1059,7 @@ function SectionPreview({ activeTab, data }: any) {
             Social <span className="text-accent-primary">Links</span>
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {data.socialLinks.map((link: any) => (
+            {data.socialLinks.map((link: SocialLink) => (
               <div key={link.id} className="flex items-center gap-4 p-4 bg-card border border-card rounded-2xl hover:border-[#CBD5E1] dark:hover:border-[rgba(255,255,255,0.12)] hover:bg-[#F1F5F9] dark:hover:bg-[rgba(255,255,255,0.05)] transition-all group">
                 <div className="w-10 h-10 bg-card rounded-xl flex items-center justify-center border border-card group-hover:border-[#CBD5E1] dark:group-hover:border-emerald-500/30 text-secondary group-hover:text-[#22c55e] dark:group-hover:text-emerald-400 transition-all">
                   <Share2 className="w-5 h-5" />
