@@ -91,12 +91,12 @@ export default function Experience() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true, margin: "-100px" }}
                                 transition={{ duration: 0.8, delay: 0.1 }}
-                                className={`flex flex-col md:flex-row items-start md:items-center gap-8 md:gap-12 ${
+                                className={`relative flex flex-col md:flex-row items-start md:items-center gap-8 md:gap-12 ${
                                     index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
                                 }`}
                             >
                                 {/* The Milestone Node - Ring + inner dot (line sits behind) */}
-                                <div className="absolute left-4 sm:left-6 md:left-1/2 md:-translate-x-[42%] pointer-events-none z-40 flex items-center justify-center">
+                                <div className="absolute top-7 left-4 sm:left-6 md:left-1/2 md:-translate-x-[42%] pointer-events-none z-40 flex items-center justify-center">
                                     <div className={`${exp.isCurrent ? 'w-3 h-3 rounded-full bg-[var(--accent-primary)] glow-pulse-green' : 'w-3 h-3 rounded-full bg-[var(--text-tertiary)]'}`} />
                                 </div>
 
