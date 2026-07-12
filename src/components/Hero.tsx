@@ -14,11 +14,16 @@ const defaultHeroContent: HeroContent = {
 };
 
 // ─── Magnetic Effect Component ───────────────────────────────────────────────
+// Desktop-only cursor-follow affordance. Gated to pointerType 'mouse' because
+// touch taps fire a synthetic pointermove/mousemove but never a leave event,
+// which used to leave the element stuck offset from its resting position
+// after a tap on mobile.
 function Magnetic({ children }: { children: React.ReactNode }) {
   const ref = React.useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (e.pointerType !== 'mouse') return;
     const { clientX, clientY } = e;
     if (!ref.current) return;
     const { left, top, width, height } = ref.current.getBoundingClientRect();
@@ -27,13 +32,14 @@ function Magnetic({ children }: { children: React.ReactNode }) {
     setPosition({ x: x * 0.35, y: y * 0.35 });
   };
 
-  const handleMouseLeave = () => setPosition({ x: 0, y: 0 });
+  const reset = () => setPosition({ x: 0, y: 0 });
 
   return (
     <motion.div
       ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={reset}
+      onPointerCancel={reset}
       animate={{ x: position.x, y: position.y }}
       transition={{ type: 'spring', stiffness: 150, damping: 15, mass: 0.1 }}
     >
