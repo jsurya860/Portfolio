@@ -118,7 +118,7 @@ export default function Achievements() {
 
   if (loading) {
     return (
-      <section className="py-24 px-6 relative">
+      <section className="py-14 sm:py-20 md:py-24 px-6 relative">
         <div className="max-w-6xl mx-auto relative z-10 flex items-center justify-center">
           <Loader className="w-8 h-8 text-blue-400 animate-spin" />
         </div>
@@ -127,14 +127,14 @@ export default function Achievements() {
   }
 
   return (
-    <section id="achievements" className="py-24 px-6 relative bg-[#F4F7F5] dark:bg-[#111827]">
+    <section id="achievements" className="py-14 sm:py-20 md:py-24 px-6 relative bg-[#F4F7F5] dark:bg-[#111827]">
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 px-4 text-primary">
             Key <span className="text-accent-primary">Achievements</span>

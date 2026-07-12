@@ -42,7 +42,7 @@ export default function Education() {
 
   if (loading) {
     return (
-      <section className="py-24 px-6 relative bg-white dark:bg-[#0F172A]">
+      <section className="py-14 sm:py-20 md:py-24 px-6 relative bg-white dark:bg-[#0F172A]">
         <div className="max-w-4xl mx-auto relative z-10 flex items-center justify-center">
           <Loader className="w-8 h-8 text-emerald-400 animate-spin" />
         </div>
@@ -51,7 +51,7 @@ export default function Education() {
   }
 
   return (
-    <section id="education" className="py-24 px-6 relative bg-[var(--bg-primary)] overflow-hidden overflow-x-hidden border-t border-[var(--border-subtle)] transition-colors duration-500">
+    <section id="education" className="py-14 sm:py-20 md:py-24 px-6 relative bg-[var(--bg-primary)] overflow-hidden overflow-x-hidden border-t border-[var(--border-subtle)] transition-colors duration-500">
       {/* System Background Decorations - Blue/Indigo focus */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-[var(--accent-secondary)] opacity-[0.03] blur-[100px] pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-[var(--accent-indigo)] opacity-[0.03] blur-[100px] pointer-events-none" />
@@ -62,7 +62,7 @@ export default function Education() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-20"
+          className="text-center mb-10 sm:mb-16 md:mb-20"
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 text-[var(--text-primary)]">
             Learning <span className="text-[var(--accent-primary)] group-hover:animate-pulse transition-all">Journey</span>

@@ -60,7 +60,7 @@ const defaultExperience: Experience[] = [
 
 export default function Experience() {
     return (
-        <section id="experience" className="py-24 px-6 relative bg-[var(--bg-primary)] overflow-hidden overflow-x-hidden transition-colors duration-500">
+        <section id="experience" className="py-14 sm:py-20 md:py-24 px-6 relative bg-[var(--bg-primary)] overflow-hidden overflow-x-hidden transition-colors duration-500">
             {/* System Background Decorations */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--accent-primary)] opacity-[0.03] blur-[100px] pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-[var(--accent-secondary)] opacity-[0.03] blur-[100px] pointer-events-none" />
@@ -71,7 +71,7 @@ export default function Experience() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
-                    className="text-center mb-20"
+                    className="text-center mb-10 sm:mb-16 md:mb-20"
                 >
                     <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 text-[var(--text-primary)]">
                         Career <span className="text-[var(--accent-primary)] group-hover:animate-pulse transition-all">Timeline</span>

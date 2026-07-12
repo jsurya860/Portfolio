@@ -92,11 +92,11 @@ function PipelineNode({
     : { boxShadow: '0 0 0 0px rgba(0,0,0,0)' };
 
   return (
-    <div className="flex flex-col items-center gap-1.5" style={{ minWidth: 44 }}>
+    <div className="flex flex-col items-center gap-1.5 w-10 sm:w-14">
       <motion.div
         animate={reduced ? undefined : pulseAnim}
         transition={{ duration: 1.4, repeat: Infinity }}
-        className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center"
+        className="w-8 h-8 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shrink-0"
         style={{
           border: `1.5px solid ${borderCol(status, isDark)}`,
           background: bgCol(status, isDark),
@@ -104,12 +104,12 @@ function PipelineNode({
         }}
       >
         <Icon
-          className="w-4 h-4 sm:w-5 sm:h-5"
+          className="w-3.5 h-3.5 sm:w-5 sm:h-5"
           style={{ color: iconCol(status, isDark), transition: 'color 0.35s ease' }}
         />
       </motion.div>
       <span
-        className="text-[9px] sm:text-[10px] font-mono font-medium text-center leading-tight whitespace-nowrap"
+        className="w-full text-[8px] sm:text-[10px] font-mono font-medium text-center leading-tight break-words"
         style={{ color: labelCol(status, isDark), transition: 'color 0.35s ease' }}
       >
         {label}
@@ -124,7 +124,7 @@ function PipelineConnector({ active, reduced, isDark }: { active: boolean; reduc
   return (
     <div
       aria-hidden="true"
-      className="flex-shrink-0 mt-[19px] sm:mt-[23px] mx-1 sm:mx-1.5 w-5 sm:w-7"
+      className="flex-shrink-0 mt-[15px] sm:mt-[23px] mx-0.5 sm:mx-1.5 w-2.5 sm:w-7"
     >
       <div
         className="w-full h-px relative overflow-hidden"
@@ -229,9 +229,9 @@ export default function HeroPipeline() {
 
       {/* Card */}
       <div className="rounded-2xl border border-[#E2E8F0] dark:border-[rgba(255,255,255,0.07)] bg-[#F8FAFC]/80 dark:bg-[rgba(255,255,255,0.03)] overflow-x-auto">
-        <div className="p-5 sm:p-6">
+        <div className="p-3 sm:p-6">
           {/* Stage row */}
-          <div className="flex items-start justify-center min-w-[320px]">
+          <div className="flex items-start justify-between sm:justify-center">
             {STAGES.map((stage, i) => (
               <div key={stage.label} className="flex items-start">
                 <PipelineNode

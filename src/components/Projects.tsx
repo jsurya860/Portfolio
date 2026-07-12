@@ -44,7 +44,7 @@ export default function Projects() {
   }, []);
 
   return (
-    <section id="projects" className="py-24 px-6 relative bg-[var(--bg-primary)] overflow-hidden transition-colors duration-500">
+    <section id="projects" className="py-14 sm:py-20 md:py-24 px-6 relative bg-[var(--bg-primary)] overflow-hidden transition-colors duration-500">
       {/* System Decorations */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20">
         <div className="absolute top-[10%] left-[5%] w-64 h-64 bg-[var(--accent-primary)] blur-[120px]" />
@@ -57,7 +57,7 @@ export default function Projects() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 text-[var(--text-primary)]">
             Project <span className="text-[var(--accent-primary)]">Exhibits</span>

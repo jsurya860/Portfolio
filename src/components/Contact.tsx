@@ -74,7 +74,7 @@ export default function Contact() {
   const labelClass = 'block text-xs font-semibold text-[#0F172A] dark:text-[#9CA3AF] uppercase tracking-widest mb-2';
 
   return (
-    <section id="contact" className="py-24 px-6 relative bg-[#F8FAFC] dark:bg-[#0F172A]">
+    <section id="contact" className="py-14 sm:py-20 md:py-24 px-6 relative bg-[#F8FAFC] dark:bg-[#0F172A]">
       <div className="max-w-xl mx-auto relative z-10">
 
         {/* Header */}
@@ -83,7 +83,7 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 px-4 text-primary">
             Get in <span className="text-accent-primary">Touch</span>

@@ -125,7 +125,7 @@ export default function About() {
 
   if (loading) {
     return (
-      <section id="about" className="py-24 px-6 relative">
+      <section id="about" className="py-14 sm:py-20 md:py-24 px-6 relative">
         <div className="max-w-6xl mx-auto relative z-10 flex items-center justify-center">
           <Loader className="w-8 h-8 text-green-400 animate-spin" />
         </div>
@@ -137,7 +137,7 @@ export default function About() {
   const displayTechStack = techStack.length > 0 ? techStack.map((t) => t.name) : defaultTechStack;
 
   return (
-    <section id="about" className="py-24 px-6 relative bg-[#F8FAFC] dark:bg-[#0F172A]">
+    <section id="about" className="py-14 sm:py-20 md:py-24 px-6 relative bg-[#F8FAFC] dark:bg-[#0F172A]">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#F1F5F9]/30 to-transparent dark:via-[#111827]/20 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -146,7 +146,7 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4 px-4 text-primary">
             About <span className="text-accent-primary">Me</span>
